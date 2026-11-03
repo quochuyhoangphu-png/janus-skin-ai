@@ -98,6 +98,20 @@ const SkinAnalysisPage = () => {
     }
   };
 
+  const handleGenderToggle = (newSex) => {
+    if (!caseInput) return;
+    const updated = {
+      ...caseInput,
+      metadata: {
+        ...caseInput.metadata,
+        sex_reported: newSex
+      }
+    };
+    setCaseInput(updated);
+    setJsonText(JSON.stringify(updated, null, 2));
+    toast.info(`Đã cập nhật giới tính: ${newSex === 'Female' ? 'Nữ' : 'Nam'}`);
+  };
+
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -301,9 +315,28 @@ const SkinAnalysisPage = () => {
                         <span>Độ tuổi:</span>
                         <strong className="text-white">{caseInput.metadata.age_years} tuổi</strong>
                       </div>
-                      <div className="d-flex justify-content-between py-1 border-bottom border-dark">
+                      <div className="d-flex justify-content-between align-items-center py-1 border-bottom border-dark">
                         <span>Giới tính:</span>
-                        <strong className="text-white">{caseInput.metadata.sex_reported === 'M' || caseInput.metadata.sex_reported === 'Male' ? 'Nam' : 'Nữ'}</strong>
+                        <div className="d-flex align-items-center gap-1">
+                          <Button
+                            variant={caseInput.metadata.sex_reported === 'Female' || caseInput.metadata.sex_reported === 'F' ? 'danger' : 'outline-secondary'}
+                            size="sm"
+                            className="py-0 px-2 fw-bold"
+                            style={{ fontSize: '0.75rem', borderRadius: '4px' }}
+                            onClick={() => handleGenderToggle('Female')}
+                          >
+                            Nữ
+                          </Button>
+                          <Button
+                            variant={caseInput.metadata.sex_reported === 'Male' || caseInput.metadata.sex_reported === 'M' ? 'primary' : 'outline-secondary'}
+                            size="sm"
+                            className="py-0 px-2 fw-bold"
+                            style={{ fontSize: '0.75rem', borderRadius: '4px' }}
+                            onClick={() => handleGenderToggle('Male')}
+                          >
+                            Nam
+                          </Button>
+                        </div>
                       </div>
                       <div className="d-flex justify-content-between py-1 border-bottom border-dark">
                         <span>Ngày thực hiện:</span>

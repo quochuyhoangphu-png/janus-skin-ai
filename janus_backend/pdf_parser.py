@@ -46,9 +46,25 @@ def parse_janus_pdf(pdf_bytes: bytes) -> Dict[str, Any]:
         except:
             pass
 
+    # Nhận diện chính xác giới tính
     sex = "Female"
-    if "nam" in text_lower or "male" in text_lower and "female" not in text_lower:
-        sex = "Male"
+    gender_match = re.search(r'(?:giới\s*tính|gender|sex)\s*[:=]?\s*([a-zA-Z\u00C0-\u1EF9]+)', text_lower)
+    if gender_match:
+        val = gender_match.group(1).strip()
+        if "nữ" in val or "female" in val or val == "f":
+            sex = "Female"
+        elif "nam" in val or "male" in val or val == "m":
+            sex = "Male"
+    else:
+        if re.search(r'\b(nữ|female|chị|bà|cô|ms|mrs)\b', text_lower):
+            sex = "Female"
+        else:
+            # Loại trừ các cụm từ địa danh như 'Việt Nam' trước khi tìm 'nam'
+            cleaned_text = text_lower.replace("việt nam", "").replace("viet nam", "")
+            if re.search(r'\b(nam|male|ông|anh|mr)\b', cleaned_text):
+                sex = "Male"
+            else:
+                sex = "Female"
 
     case_id = "PDF_UPLOADED"
     id_match = re.search(r'(?:case[_\s]?id|mã\s*hs|mã\s*đo|id)\s*[:=]?\s*([a-zA-Z0-9_\-]+)', raw_text, re.IGNORECASE)
