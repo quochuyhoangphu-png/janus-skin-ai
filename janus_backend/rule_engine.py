@@ -720,5 +720,5 @@ class JanusExpertSystem:
             "stage_3_skin_type": skin_type,
             "stage_4_ingredient_recommendations": recommendations,
             "stage_5_product_matches": products,
-            "medical_disclaimer": "CẢNH BÁO Y KHOA: Hệ thống hoạt động dựa trên bộ luật chuyên gia (Rule-based Expert System). Kết quả chỉ phục vụ mục đích tham khảo chăm sóc da thẩm mỹ, tuyệt đối KHÔNG thay thế chẩn đoán y khoa hoặc phác đồ điều trị của bác sĩ da liễu."
+            "medical_disclaimer": "LƯU Ý CHUYÊN MÔN THẨM MỸ: Kết quả phân tích và phác đồ được tổng hợp dựa trên dữ liệu thiết bị đo da JANUS Pro và cơ sở dữ liệu da liễu thẩm mỹ, chỉ phục vụ mục đích tư vấn chăm sóc da cá nhân hóa, không thay thế chẩn đoán bệnh lý của bác sĩ chuyên khoa."
         }

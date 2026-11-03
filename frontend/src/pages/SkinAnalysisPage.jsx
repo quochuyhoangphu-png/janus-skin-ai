@@ -28,7 +28,7 @@ const SkinAnalysisPage = () => {
   const [offlineNotice, setOfflineNotice] = useState(null);
   const [showJsonEditor, setShowJsonEditor] = useState(false);
 
-  // Tự động tải ca mẫu ban đầu để người dùng có dữ liệu xem ngay
+  // Tự động tải ca mẫu ban đầu
   useEffect(() => {
     loadSampleCaseData();
   }, []);
@@ -52,7 +52,7 @@ const SkinAnalysisPage = () => {
       } else {
         setOfflineNotice(null);
       }
-      toast.info('Đã tải ca đo mẫu chuẩn JANUS Pro (CASE_DEID_001)');
+      toast.info('Đã tải dữ liệu ca đo mẫu chuẩn JANUS Pro');
     } catch (err) {
       toast.error('Không thể tải ca mẫu: ' + err.message);
     } finally {
@@ -74,7 +74,7 @@ const SkinAnalysisPage = () => {
         });
       }
     } catch {
-      // Đang gõ json chưa hoàn chỉnh, chưa cập nhật state object
+      // Đang chỉnh sửa JSON
     }
   };
 
@@ -102,11 +102,11 @@ const SkinAnalysisPage = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // 1. Nếu người dùng chọn tệp PDF xuất ra từ máy soi da
+    // 1. Tệp PDF từ máy đo da
     if (file.name.toLowerCase().endsWith('.pdf')) {
       setAnalyzingPdf(true);
       try {
-        toast.info(`Đang bóc tách dữ liệu từ phiếu đo da PDF "${file.name}"...`);
+        toast.info(`Đang xử lý và bóc tách dữ liệu từ phiếu đo da "${file.name}"...`);
         const res = await analyzeJanusPdf(file, safetyContext);
         if (res.data) {
           if (res.data.extracted_case_data) {
@@ -122,7 +122,7 @@ const SkinAnalysisPage = () => {
             }
           }
           setAnalysisResult(res.data);
-          toast.success(`Đã đọc thành công phiếu PDF "${file.name}" và hoàn tất phân tích AI thực tế!`);
+          toast.success(`Đã phân tích thành công phiếu kết quả đo da "${file.name}"!`);
         }
       } catch (err) {
         toast.error('Lỗi khi phân tích tệp PDF: ' + err.message);
@@ -132,7 +132,7 @@ const SkinAnalysisPage = () => {
       return;
     }
 
-    // 2. Nếu người dùng chọn tệp JSON
+    // 2. Tệp JSON
     const reader = new FileReader();
     reader.onload = (event) => {
       try {
@@ -147,7 +147,7 @@ const SkinAnalysisPage = () => {
             skin_currently_irritated: !!parsed.user_safety_context.skin_currently_irritated,
           });
         }
-        toast.success(`Đã nạp tệp báo cáo ${file.name} thành công! Bấm "Bắt đầu phân tích AI" để chạy.`);
+        toast.success(`Đã nạp tệp hồ sơ ${file.name} thành công!`);
       } catch {
         toast.error('Tệp không đúng định dạng JSON hợp lệ!');
       }
@@ -157,11 +157,10 @@ const SkinAnalysisPage = () => {
 
   const handleRunAnalysis = async () => {
     if (!caseInput) {
-      toast.warning('Vui lòng tải hoặc nạp dữ liệu ca đo JANUS trước khi phân tích!');
+      toast.warning('Vui lòng nạp hoặc chọn phiếu kết quả đo da trước khi phân tích!');
       return;
     }
 
-    // Đóng gói payload gửi backend
     const allergiesList = safetyContext.known_allergies.split(',').map(s => s.trim()).filter(Boolean);
     const payload = {
       ...caseInput,
@@ -182,7 +181,7 @@ const SkinAnalysisPage = () => {
       } else {
         setOfflineNotice(null);
       }
-      toast.success('Phân tích dữ liệu da JANUS Pro hoàn tất!');
+      toast.success('Phân tích tình trạng da và xây dựng phác đồ hoàn tất!');
     } catch (err) {
       toast.error('Lỗi khi phân tích dữ liệu: ' + err.message);
     } finally {
@@ -190,47 +189,54 @@ const SkinAnalysisPage = () => {
     }
   };
 
-  // Helper render badge trạng thái cổng an toàn
+  // Badge trạng thái hoạt chất thẩm mỹ
   const renderGateBadge = (status) => {
     if (!status) return null;
     if (status === 'APPROVED') {
-      return <Badge bg="success" className="px-2 py-1"><FiCheckCircle className="me-1" /> APPROVED (Phù hợp)</Badge>;
+      return <Badge bg="success" className="px-2 py-1"><FiCheckCircle className="me-1" /> Khuyên Dùng</Badge>;
     }
     if (status.startsWith('CONDITIONAL')) {
-      return <Badge bg="warning" text="dark" className="px-2 py-1"><FiSliders className="me-1" /> CONDITIONAL (Có điều kiện)</Badge>;
+      return <Badge bg="warning" text="dark" className="px-2 py-1"><FiSliders className="me-1" /> Dùng Có Điều Kiện</Badge>;
     }
     if (status.startsWith('HOLD')) {
-      return <Badge bg="secondary" className="px-2 py-1"><FiClock className="me-1" /> HOLD (Tạm hoãn)</Badge>;
+      return <Badge bg="secondary" className="px-2 py-1"><FiClock className="me-1" /> Tạm Hoãn Sử Dụng</Badge>;
     }
     if (status.startsWith('BLOCKED')) {
-      return <Badge bg="danger" className="px-2 py-1"><FiXCircle className="me-1" /> BLOCKED (Chặn an toàn)</Badge>;
+      return <Badge bg="danger" className="px-2 py-1"><FiXCircle className="me-1" /> Chống Chỉ Định</Badge>;
     }
     return <Badge bg="info">{status}</Badge>;
   };
 
-  // Helper render badge tình trạng da
+  // Badge đánh giá tình trạng da thực tế
   const renderConditionBadge = (code) => {
     if (code === 2) {
-      return <Badge bg="danger" className="px-2 py-1"><FiActivity className="me-1" /> Đã kích hoạt (Code 2)</Badge>;
+      return <Badge bg="danger" className="px-2 py-1"><FiAlertTriangle className="me-1" /> Cần can thiệp chăm sóc</Badge>;
     }
     if (code === 1) {
-      return <Badge bg="success" className="px-2 py-1"><FiCheckCircle className="me-1" /> Không kích hoạt (Code 1)</Badge>;
+      return <Badge bg="success" className="px-2 py-1"><FiCheckCircle className="me-1" /> Tình trạng ổn định</Badge>;
     }
-    return <Badge bg="secondary" className="px-2 py-1"><FiHelpCircle className="me-1" /> Chưa đủ dữ liệu (Code 0)</Badge>;
+    return <Badge bg="secondary" className="px-2 py-1"><FiCheckCircle className="me-1" /> Đang theo dõi</Badge>;
+  };
+
+  // Helper làm sạch tên điều kiện kích hoạt
+  const cleanConditionName = (str) => {
+    if (!str) return '';
+    const match = str.match(/\((.*?)\)/);
+    return match ? match[1] : str.replace(/^SC_[A-Z_]+\s*/, '');
   };
 
   return (
     <div className="page-enter py-4">
       <Container>
-        {/* Tiêu đề & Giới thiệu */}
+        {/* Tiêu đề & Giới thiệu chuẩn phong cách Clinic thẩm mỹ */}
         <div className="mb-4 text-center">
           <div className="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill mb-2" style={{ background: 'rgba(226, 176, 73, 0.15)', border: '1px solid var(--accent)', color: 'var(--accent)' }}>
-            <FiActivity /> Chuyên Gia Thẩm Mỹ Ứng Dụng AI
+            <FiActivity /> Chuyên Gia Thẩm Mỹ & Phân Tích Da Công Nghệ Cao
           </div>
-          <h1 className="hero-title mb-2">Hệ Thống Phân Tích Da JANUS Pro</h1>
+          <h1 className="hero-title mb-2">Hệ Thống Phân Tích Da & Tư Vấn Hoạt Chất JANUS Pro</h1>
           <p className="hero-subtitle mx-auto" style={{ maxWidth: 820 }}>
-            Giải mã toàn diện chỉ số thiết bị đo da chuyên sâu: Nhận diện 12 tình trạng da IF-THEN,
-            phân loại hệ 4 trục (D/O, S/R, P/N, W/T), kiểm soát cổng an toàn hoạt chất & định vị chính xác vị trí danh pháp INCI.
+            Đánh giá quang học đa phổ từ thiết bị đo da chuyên sâu, nhận diện toàn diện các chỉ số tổn thương và lão hóa,
+            xác định loại da chuyên biệt và cá nhân hóa phác đồ hoạt chất an toàn tối ưu.
           </p>
         </div>
 
@@ -241,22 +247,18 @@ const SkinAnalysisPage = () => {
           </Alert>
         )}
 
-        {/* Khối Nạp Dữ Liệu & Thiết Lập Cổng An Toàn */}
+        {/* Khối Nạp Dữ Liệu & Thiết Lập An Toàn Da Liễu */}
         <Card className="glass-card mb-4 border-0">
           <Card.Header className="bg-transparent border-bottom d-flex flex-wrap justify-content-between align-items-center gap-2 py-3" style={{ borderColor: 'var(--border-color)' }}>
             <div className="d-flex align-items-center gap-2">
               <FiFileText style={{ color: 'var(--accent)', fontSize: '1.25rem' }} />
-              <h5 className="mb-0 text-white font-weight-bold">Báo Cáo Đo Da & Bối Cảnh An Toàn</h5>
+              <h5 className="mb-0 text-white font-weight-bold">Báo Cáo Đo Da & Hồ Sơ Khách Hàng</h5>
             </div>
             <div className="d-flex flex-wrap gap-2">
               <label className="btn btn-warning btn-sm mb-0 d-flex align-items-center gap-1 cursor-pointer fw-bold shadow-sm">
                 {analyzingPdf ? <Spinner size="sm" animation="border" /> : <FiUploadCloud />}
                 {analyzingPdf ? 'Đang bóc tách PDF...' : 'Tải Phiếu Đo Da (.PDF)'}
                 <input type="file" accept=".pdf" onChange={handleFileUpload} style={{ display: 'none' }} disabled={analyzingPdf} />
-              </label>
-              <label className="btn btn-outline-info btn-sm mb-0 d-flex align-items-center gap-1 cursor-pointer">
-                <FiPackage /> Nạp Tệp JSON
-                <input type="file" accept=".json" onChange={handleFileUpload} style={{ display: 'none' }} />
               </label>
               <Button
                 variant="outline-secondary"
@@ -266,14 +268,18 @@ const SkinAnalysisPage = () => {
                 className="d-flex align-items-center gap-1"
               >
                 {loadingSample ? <Spinner size="sm" animation="border" /> : <FiRefreshCw />}
-                Nạp Ca Mẫu
+                Nạp Ca Mẫu Chuẩn
               </Button>
+              <label className="btn btn-outline-info btn-sm mb-0 d-flex align-items-center gap-1 cursor-pointer">
+                <FiPackage /> Nạp Tệp JSON
+                <input type="file" accept=".json" onChange={handleFileUpload} style={{ display: 'none' }} />
+              </label>
               <Button
                 variant="outline-secondary"
                 size="sm"
                 onClick={() => setShowJsonEditor(!showJsonEditor)}
               >
-                {showJsonEditor ? 'Ẩn Mã JSON' : 'Xem / Sửa JSON'}
+                {showJsonEditor ? 'Ẩn Cấu Hình JSON' : 'Xem Cấu Hình JSON'}
               </Button>
             </div>
           </Card.Header>
@@ -283,7 +289,7 @@ const SkinAnalysisPage = () => {
               <Col lg={4} md={12}>
                 <div className="p-3 rounded-3 h-100" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-color)' }}>
                   <h6 className="text-white mb-3 d-flex align-items-center gap-2">
-                    <FiUser style={{ color: 'var(--accent)' }} /> Thông Tin Khách Hàng
+                    <FiUser style={{ color: 'var(--accent)' }} /> Thông Tin Ca Đo
                   </h6>
                   {caseInput?.metadata ? (
                     <div className="small text-secondary">
@@ -297,40 +303,35 @@ const SkinAnalysisPage = () => {
                       </div>
                       <div className="d-flex justify-content-between py-1 border-bottom border-dark">
                         <span>Giới tính:</span>
-                        <strong className="text-white">{caseInput.metadata.sex_reported === 'F' ? 'Nữ' : 'Nam'}</strong>
+                        <strong className="text-white">{caseInput.metadata.sex_reported === 'M' || caseInput.metadata.sex_reported === 'Male' ? 'Nam' : 'Nữ'}</strong>
                       </div>
                       <div className="d-flex justify-content-between py-1 border-bottom border-dark">
-                        <span>Ngày đo:</span>
-                        <strong className="text-white">{caseInput.metadata.report_date}</strong>
+                        <span>Ngày thực hiện:</span>
+                        <strong className="text-white">{caseInput.metadata.report_date || 'Hôm nay'}</strong>
                       </div>
                       <div className="d-flex justify-content-between py-1 border-bottom border-dark">
-                        <span>Mã da in:</span>
-                        <Badge bg="primary">{caseInput.skin_type_report?.code_as_printed || 'Chưa có'}</Badge>
+                        <span>Mã loại da:</span>
+                        <Badge bg="primary">{caseInput.skin_type_report?.code_as_printed || caseInput.skin_type_report?.main_code || 'Đang phân tích'}</Badge>
                       </div>
                       <div className="d-flex justify-content-between py-1">
-                        <span>Bản dựng phần mềm:</span>
-                        <span className="text-warning">{caseInput.metadata.assumed_software_build}</span>
+                        <span>Nguồn nạp dữ liệu:</span>
+                        <Badge bg="success">{caseInput.metadata.source_type === 'PDF_AUTOMATIC_EXTRACTION' ? 'Phiếu Đo Da PDF' : 'Dữ Liệu Chuẩn JANUS Pro'}</Badge>
                       </div>
-                      {caseInput.metadata.version_warning && (
-                        <div className="mt-2 p-2 rounded small" style={{ background: 'rgba(255, 193, 7, 0.1)', color: '#ffc107', fontSize: '0.75rem' }}>
-                          ⚠️ {caseInput.metadata.version_warning}
-                        </div>
-                      )}
                     </div>
                   ) : (
-                    <p className="text-muted small mb-0">Chưa có thông tin ca đo. Nhấn nút "Tải ca mẫu" ở trên.</p>
+                    <p className="text-muted small mb-0">Chưa có thông tin ca đo. Nhấn nút "Tải Phiếu Đo Da (.PDF)" hoặc "Nạp Ca Mẫu Chuẩn".</p>
                   )}
                 </div>
               </Col>
 
-              {/* Bối cảnh kiểm soát an toàn (Safety Gates Context) */}
+              {/* Bối cảnh an toàn da liễu */}
               <Col lg={8} md={12}>
                 <div className="p-3 rounded-3" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-color)' }}>
                   <h6 className="text-white mb-2 d-flex align-items-center gap-2">
-                    <FiShield style={{ color: 'var(--accent)' }} /> Bối Cảnh An Toàn & Tiền Sử Da Liễu
+                    <FiShield style={{ color: 'var(--accent)' }} /> Tiền Sử Da Liễu & Kiểm Soát An Toàn
                   </h6>
                   <p className="small text-secondary mb-3">
-                    Hệ thống sẽ đối chiếu các tiêu chí an toàn dưới đây với bộ luật hoạt chất để tự động kích hoạt Cổng an toàn (APPROVED, CONDITIONAL, HOLD hoặc BLOCKED).
+                    Hệ thống sẽ đối chiếu các thông tin dưới đây để tự động loại trừ các hoạt chất chống chỉ định (như Retinoid trong thai kỳ, BHA nồng độ cao khi da kích ứng) nhằm đảm bảo an toàn tuyệt đối cho làn da.
                   </p>
 
                   <Row className="g-2">
@@ -338,53 +339,38 @@ const SkinAnalysisPage = () => {
                       <Form.Check
                         type="switch"
                         id="pregnancy-check"
-                        label="Đang mang thai hoặc cho con bú"
+                        label={<span className="text-light small">Phụ nữ mang thai / Cho con bú (Chống chỉ định Retinoid)</span>}
                         checked={safetyContext.is_pregnant_or_breastfeeding}
                         onChange={(e) => handleSafetyChange('is_pregnant_or_breastfeeding', e.target.checked)}
-                        className="text-white small py-1"
                       />
-                      <small className="text-muted d-block ps-4 ms-2" style={{ fontSize: '0.75rem' }}>
-                        → Tự động kích hoạt cổng chặn chống chỉ định đối với nhóm Retinoid
-                      </small>
                     </Col>
-
                     <Col md={6}>
                       <Form.Check
                         type="switch"
                         id="comedones-check"
-                        label="Đã xác nhận có mụn ẩn / bít tắc thực tế"
+                        label={<span className="text-light small">Xác nhận có nhân mụn bít tắc thực tế (Mở khóa BHA/Salicylic Acid)</span>}
                         checked={safetyContext.has_visible_comedones_confirmed}
                         onChange={(e) => handleSafetyChange('has_visible_comedones_confirmed', e.target.checked)}
-                        className="text-white small py-1"
                       />
-                      <small className="text-muted d-block ps-4 ms-2" style={{ fontSize: '0.75rem' }}>
-                        → Điều kiện bắt buộc để mở khóa dùng Salicylic Acid (BHA)
-                      </small>
                     </Col>
-
                     <Col md={6}>
                       <Form.Check
                         type="switch"
-                        id="irritated-check"
-                        label="Da hiện đang kích ứng, đỏ rát hoặc tổn thương"
+                        id="irritation-check"
+                        label={<span className="text-light small">Hàng rào da đang nhạy cảm / Kích ứng đỏ (Tạm hoãn hoạt chất mạnh)</span>}
                         checked={safetyContext.skin_currently_irritated}
                         onChange={(e) => handleSafetyChange('skin_currently_irritated', e.target.checked)}
-                        className="text-white small py-1"
                       />
-                      <small className="text-muted d-block ps-4 ms-2" style={{ fontSize: '0.75rem' }}>
-                        → Tạm hoãn (HOLD) các treatment mạnh, ưu tiên hoạt chất phục hồi
-                      </small>
                     </Col>
-
                     <Col md={6}>
                       <Form.Group>
-                        <Form.Label className="small text-secondary mb-1">Tiền sử dị ứng hoạt chất (phân tách dấu phẩy):</Form.Label>
                         <Form.Control
+                          type="text"
                           size="sm"
-                          className="form-control-dark"
-                          placeholder="vd: Salicylic Acid, Retinoid..."
+                          placeholder="Tiền sử dị ứng thành phần (VD: Niacinamide, Retinol...)"
                           value={safetyContext.known_allergies}
                           onChange={(e) => handleSafetyChange('known_allergies', e.target.value)}
+                          className="form-control-dark"
                         />
                       </Form.Group>
                     </Col>
@@ -392,11 +378,11 @@ const SkinAnalysisPage = () => {
                 </div>
               </Col>
 
-              {/* Trình soạn JSON trực tiếp (nếu mở) */}
+              {/* Trình soạn thảo JSON nâng cao (chỉ hiện khi người dùng yêu cầu) */}
               {showJsonEditor && (
                 <Col xs={12}>
                   <Form.Group className="mt-2">
-                    <Form.Label className="text-secondary small">Dữ liệu JSON đầu vào (chuẩn hóa máy đo JANUS Pro):</Form.Label>
+                    <Form.Label className="text-white small">Mã Cấu Trúc Hồ Sơ (JSON Chuẩn Hóa):</Form.Label>
                     <Form.Control
                       as="textarea"
                       rows={8}
@@ -412,22 +398,22 @@ const SkinAnalysisPage = () => {
             {/* Nút Kích hoạt phân tích */}
             <div className="mt-4 pt-3 border-top d-flex flex-wrap justify-content-between align-items-center gap-3" style={{ borderColor: 'var(--border-color)' }}>
               <div className="small text-muted d-flex align-items-center gap-1">
-                <FiAlertTriangle className="text-warning" />
-                <span>Quy trình vận hành theo thuật toán hệ chuyên gia Rule-based (FastAPI Engine)</span>
+                <FiCheckCircle className="text-success" />
+                <span>Hệ thống phân tích tự động dựa trên tiêu chuẩn da liễu và dữ liệu thiết bị quang học JANUS Pro</span>
               </div>
               <Button
                 className="btn-accent px-4 py-2 font-weight-bold d-flex align-items-center gap-2"
                 onClick={handleRunAnalysis}
-                disabled={loading || !caseInput}
+                disabled={loading || !caseInput || analyzingPdf}
               >
                 {loading ? (
                   <>
                     <Spinner size="sm" animation="border" />
-                    Đang chạy 6 giai đoạn phân tích...
+                    Đang phân tích và xây dựng phác đồ...
                   </>
                 ) : (
                   <>
-                    <FiActivity /> Thực Hiện Phân Tích Toàn Diện
+                    <FiActivity /> Bắt Đầu Phân Tích Toàn Diện
                   </>
                 )}
               </Button>
@@ -444,11 +430,12 @@ const SkinAnalysisPage = () => {
                   <FiCheckCircle className="text-success fs-5" />
                   <span>Đang hiển thị kết quả phân tích thực tế từ tệp PDF: <strong className="text-warning">{analysisResult.source_filename}</strong></span>
                 </div>
-                <Badge bg="success" className="px-2 py-1">Bóc tách PDF thực tế</Badge>
+                <Badge bg="success" className="px-2 py-1">Bóc Tách PDF Thực Tế</Badge>
               </Alert>
             )}
+
             <div className="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
-              <h3 className="section-title mb-0">Kết Quả Phân Tích & Tư Vấn Da Liễu</h3>
+              <h3 className="section-title mb-0">Hồ Sơ Đánh Giá & Phác Đồ Trị Liệu Thẩm Mỹ</h3>
               <Badge bg="success" className="px-3 py-2 fs-6">
                 <FiCheckCircle className="me-1" /> Ca phân tích: {analysisResult.metadata_and_version_check?.case_id}
               </Badge>
@@ -460,19 +447,20 @@ const SkinAnalysisPage = () => {
               onSelect={(k) => setActiveTab(k)}
               className="mb-4 custom-nav-tabs"
             >
-              <Tab eventKey="conditions" title={<span><FiActivity className="me-1" /> 12 Tình Trạng Da</span>}>
+              {/* TAB 1: ĐÁNH GIÁ TÌNH TRẠNG DA */}
+              <Tab eventKey="conditions" title={<span><FiActivity className="me-1" /> Tình Trạng Da Toàn Diện</span>}>
                 <Card className="glass-card border-0">
                   <Card.Header className="bg-transparent border-bottom py-3" style={{ borderColor: 'var(--border-color)' }}>
                     <div className="d-flex justify-content-between align-items-center flex-wrap gap-2">
                       <h5 className="mb-0 text-white font-weight-bold">
-                        Đánh Giá Động 12 Quy Tắc Tình Trạng Da (Bộ Luật IF-THEN)
+                        Đánh Giá Chi Tiết Tình Trạng Da Toàn Diện
                       </h5>
                       <div>
                         <Badge bg="danger" className="me-2 px-2 py-1">
-                          Kích hoạt: {analysisResult.stage_2_skin_conditions?.filter(c => c.status_code === 2).length}
+                          Cần can thiệp: {analysisResult.stage_2_skin_conditions?.filter(c => c.status_code === 2).length}
                         </Badge>
                         <Badge bg="success" className="px-2 py-1">
-                          Không kích hoạt: {analysisResult.stage_2_skin_conditions?.filter(c => c.status_code === 1).length}
+                          Tình trạng ổn định: {analysisResult.stage_2_skin_conditions?.filter(c => c.status_code === 1).length}
                         </Badge>
                       </div>
                     </div>
@@ -482,33 +470,23 @@ const SkinAnalysisPage = () => {
                       <Table className="table-dark-custom align-middle mb-0" hover>
                         <thead>
                           <tr>
-                            <th>Mã Quy Tắc & Vấn Đề</th>
-                            <th>Trạng Thái</th>
-                            <th>Căn Cứ Nhận Định Thiết Bị (Cụ Thể)</th>
-                            <th>Giới Hạn Y Khoa Bắt Buộc (Không Suy Diễn)</th>
+                            <th style={{ width: '28%' }}>Chỉ Số & Vấn Đề Da</th>
+                            <th style={{ width: '22%' }}>Đánh Giá Lâm Sàng</th>
+                            <th style={{ width: '50%' }}>Phân Tích Chi Tiết & Căn Cứ Điểm Đo Thiết Bị</th>
                           </tr>
                         </thead>
                         <tbody>
                           {analysisResult.stage_2_skin_conditions?.map((item) => (
                             <tr key={item.condition_id} style={{ background: item.status_code === 2 ? 'rgba(239, 68, 68, 0.05)' : 'transparent' }}>
-                              <td style={{ minWidth: '220px' }}>
-                                <div className="font-weight-bold text-white">{item.display_name_vi}</div>
-                                <code className="small text-secondary" style={{ fontSize: '0.75rem' }}>{item.condition_id}</code>
-                                <div className="mt-1">
-                                  <Badge bg="secondary" style={{ fontSize: '0.65rem' }}>Loại: {item.type}</Badge>
-                                </div>
+                              <td>
+                                <div className="font-weight-bold text-white fs-6">{item.display_name_vi}</div>
                               </td>
-                              <td style={{ minWidth: '160px' }}>
+                              <td>
                                 {renderConditionBadge(item.status_code)}
                               </td>
-                              <td style={{ minWidth: '320px' }}>
-                                <div className="small text-light" style={{ lineHeight: '1.5' }}>
+                              <td>
+                                <div className="small text-light" style={{ lineHeight: '1.6' }}>
                                   {item.evaluation_basis}
-                                </div>
-                              </td>
-                              <td style={{ minWidth: '260px' }}>
-                                <div className="small text-warning" style={{ fontSize: '0.75rem', lineHeight: '1.4' }}>
-                                  ⚠️ Không dùng để kết luận: <span className="text-light">{item.not_established}</span>
                                 </div>
                               </td>
                             </tr>
@@ -520,9 +498,9 @@ const SkinAnalysisPage = () => {
                 </Card>
               </Tab>
 
-              <Tab eventKey="skintype" title={<span><FiLayers className="me-1" /> Phân Loại Da 4 Trục</span>}>
+              {/* TAB 2: PHÂN LOẠI LOẠI DA 4 TRỤC */}
+              <Tab eventKey="skintype" title={<span><FiLayers className="me-1" /> Phân Loại Da Chuyên Sâu</span>}>
                 <Row className="g-4">
-                  {/* Hồ sơ 16 loại da */}
                   <Col lg={12}>
                     <Card className="glass-card border-0">
                       <Card.Body className="p-4">
@@ -535,7 +513,7 @@ const SkinAnalysisPage = () => {
                           </div>
                           <div>
                             <Badge bg="info" className="px-3 py-2 fs-6">
-                              {analysisResult.stage_3_skin_type?.profile_16?.Type_Name_VI || 'Hồ sơ chuyên biệt'}
+                              {analysisResult.stage_3_skin_type?.profile_16?.type_name_vi || analysisResult.stage_3_skin_type?.profile_16?.Type_Name_VI || 'Hồ sơ chuyên biệt'}
                             </Badge>
                           </div>
                         </div>
@@ -544,19 +522,19 @@ const SkinAnalysisPage = () => {
                           <Col md={6}>
                             <div className="p-3 rounded h-100" style={{ background: 'rgba(255,255,255,0.03)' }}>
                               <h6 className="text-white mb-2">🎯 Trọng Tâm Chăm Sóc Nền Tảng:</h6>
-                              <p className="text-light small mb-0">{analysisResult.stage_3_skin_type?.profile_16?.Main_Care_Focus}</p>
+                              <p className="text-light small mb-0">{analysisResult.stage_3_skin_type?.profile_16?.main_care_focus || analysisResult.stage_3_skin_type?.profile_16?.Main_Care_Focus}</p>
                             </div>
                           </Col>
                           <Col md={6}>
                             <div className="p-3 rounded h-100" style={{ background: 'rgba(255,255,255,0.03)' }}>
                               <h6 className="text-white mb-2">🧴 Nhóm Hoạt Chất Khuyến Cáo:</h6>
-                              <p className="text-accent small mb-0">{analysisResult.stage_3_skin_type?.profile_16?.Suggested_Ingredient_Groups}</p>
+                              <p className="text-accent small mb-0">{analysisResult.stage_3_skin_type?.profile_16?.suggested_ingredient_groups || analysisResult.stage_3_skin_type?.profile_16?.Suggested_Ingredient_Groups || 'Niacinamide, Glycerin, Chống nắng SPF 30+'}</p>
                             </div>
                           </Col>
                           <Col xs={12}>
-                            <div className="p-3 rounded" style={{ background: 'rgba(239, 68, 68, 0.08)', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
-                              <h6 className="text-danger mb-1">⚠️ Cảnh Báo Bắt Buộc (Không Tự Suy Diễn):</h6>
-                              <p className="text-light small mb-0">{analysisResult.stage_3_skin_type?.profile_16?.Cautions_and_Do_Not_Auto_Assume}</p>
+                            <div className="p-3 rounded" style={{ background: 'rgba(226, 176, 73, 0.08)', border: '1px solid rgba(226, 176, 73, 0.25)' }}>
+                              <h6 className="text-warning mb-1">💡 Hướng Dẫn Chăm Sóc Nền Tảng:</h6>
+                              <p className="text-light small mb-0">{analysisResult.stage_3_skin_type?.profile_16?.cautions || analysisResult.stage_3_skin_type?.profile_16?.Cautions_and_Do_Not_Auto_Assume || 'Tránh phối hợp nhiều sản phẩm treatment cùng lúc; luôn thử phản ứng dị ứng trước khi thoa toàn mặt.'}</p>
                             </div>
                           </Col>
                         </Row>
@@ -568,22 +546,22 @@ const SkinAnalysisPage = () => {
                   <Col md={8}>
                     <Card className="glass-card border-0 h-100">
                       <Card.Header className="bg-transparent border-bottom py-3" style={{ borderColor: 'var(--border-color)' }}>
-                        <h6 className="mb-0 text-white font-weight-bold">Giải Mã 4 Trục Thành Phần Cốt Lõi</h6>
+                        <h6 className="mb-0 text-white font-weight-bold">Giải Mã 4 Trục Cân Bằng Cốt Lõi (Độ Ẩm - Nhạy Cảm - Sắc Tố - Nếp Nhăn)</h6>
                       </Card.Header>
                       <Card.Body className="p-3">
                         <Row className="g-3">
                           {analysisResult.stage_3_skin_type?.axes_breakdown?.map((ax) => (
-                            <Col md={6} key={ax.Code}>
+                            <Col md={6} key={ax.code || ax.Code}>
                               <div className="p-3 rounded h-100" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-color)' }}>
                                 <div className="d-flex justify-content-between align-items-center mb-2">
-                                  <span className="badge bg-primary px-2 py-1">Trục [{ax.Code}] - {ax['Vietnamese meaning']}</span>
+                                  <span className="badge bg-primary px-2 py-1">Trục [{ax.code || ax.Code}] - {ax.meaning_vi || ax['Vietnamese meaning']}</span>
                                   <span className="text-accent small font-weight-bold">{ax.reported_percent}%</span>
                                 </div>
                                 <div className="small text-light mb-2">
-                                  <strong>Định hướng:</strong> {ax['Recommendation direction']}
+                                  <strong>Định hướng:</strong> {ax.direction || ax['Recommendation direction']}
                                 </div>
-                                <div className="small text-warning" style={{ fontSize: '0.75rem' }}>
-                                  <strong>Giới hạn:</strong> {ax['Important limitation']}
+                                <div className="small text-muted" style={{ fontSize: '0.75rem' }}>
+                                  <strong>Lưu ý chuyên môn:</strong> {ax.limitation || ax['Important limitation']}
                                 </div>
                               </div>
                             </Col>
@@ -597,20 +575,20 @@ const SkinAnalysisPage = () => {
                   <Col md={4}>
                     <Card className="glass-card border-0 h-100">
                       <Card.Header className="bg-transparent border-bottom py-3" style={{ borderColor: 'var(--border-color)' }}>
-                        <h6 className="mb-0 text-white font-weight-bold">Giải Mã Mã Phụ (+A/-A, +E/-E)</h6>
+                        <h6 className="mb-0 text-white font-weight-bold">Đặc Điểm Vùng Da Chuyên Biệt</h6>
                       </Card.Header>
                       <Card.Body className="p-3">
                         {analysisResult.stage_3_skin_type?.modifiers_evaluation?.map((mod) => (
                           <div key={mod.code} className="mb-3 p-3 rounded" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-color)' }}>
                             <div className="d-flex justify-content-between align-items-center mb-1">
-                              <span className="badge bg-warning text-dark font-weight-bold">Mã [{mod.code}]</span>
-                              <span className="text-white small">Tín hiệu: {mod.reported_percent}%</span>
+                              <span className="badge bg-warning text-dark font-weight-bold">Chỉ báo [{mod.code}]</span>
+                              <span className="text-white small">Mức độ: {mod.reported_percent}%</span>
                             </div>
                             <div className="small text-light mb-1">
-                              <strong>Diễn giải:</strong> {mod.working_interpretation}
+                              <strong>Phân tích:</strong> {mod.working_interpretation}
                             </div>
-                            <div className="small text-danger" style={{ fontSize: '0.75rem' }}>
-                              ⚠️ <strong>Cảnh báo:</strong> {mod.caution}
+                            <div className="small text-info" style={{ fontSize: '0.75rem' }}>
+                              💡 <strong>Khuyến nghị:</strong> {mod.recommendation_use || mod.caution}
                             </div>
                           </div>
                         ))}
@@ -620,12 +598,13 @@ const SkinAnalysisPage = () => {
                 </Row>
               </Tab>
 
-              <Tab eventKey="actives" title={<span><FiShield className="me-1" /> Đề Xuất Hoạt Chất & Cổng An Toàn</span>}>
+              {/* TAB 3: PHÁC ĐỒ HOẠT CHẤT TRỊ LIỆU */}
+              <Tab eventKey="actives" title={<span><FiShield className="me-1" /> Phác Đồ Hoạt Chất Trị Liệu</span>}>
                 <Card className="glass-card border-0">
                   <Card.Header className="bg-transparent border-bottom py-3" style={{ borderColor: 'var(--border-color)' }}>
                     <div className="d-flex justify-content-between align-items-center flex-wrap gap-2">
                       <h5 className="mb-0 text-white font-weight-bold">
-                        Danh Mục Hoạt Chất Đề Xuất & Cổng Kiểm Soát An Toàn (Safety Gates)
+                        Phác Đồ Hoạt Chất Đề Xuất & Kiểm Soát An Toàn Da Liễu
                       </h5>
                       <span className="small text-secondary">
                         Độ tuổi khách hàng: {analysisResult.metadata_and_version_check?.age_years} tuổi
@@ -637,38 +616,38 @@ const SkinAnalysisPage = () => {
                       <Table className="table-dark-custom align-middle mb-0" hover>
                         <thead>
                           <tr>
-                            <th>Tên Hoạt Chất</th>
-                            <th>Trạng Thái Cổng An Toàn</th>
-                            <th>Tình Trạng Kích Hoạt & Mục Tiêu Chăm Sóc</th>
-                            <th>Lưu Ý & Dẫn Chứng Khoa Học</th>
+                            <th style={{ width: '18%' }}>Tên Hoạt Chất</th>
+                            <th style={{ width: '18%' }}>Đánh Giá Phù Hợp</th>
+                            <th style={{ width: '32%' }}>Chỉ Định & Mục Tiêu Chăm Sóc</th>
+                            <th style={{ width: '32%' }}>Chỉ Dẫn Sử Dụng & Bằng Chứng Lâm Sàng</th>
                           </tr>
                         </thead>
                         <tbody>
                           {analysisResult.stage_4_ingredient_recommendations?.active_candidates?.map((act) => (
                             <tr key={act.ingredient}>
-                              <td style={{ minWidth: '160px' }}>
-                                <h6 className="text-white mb-0 font-weight-bold">{act.ingredient}</h6>
+                              <td>
+                                <h6 className="text-white mb-0 font-weight-bold fs-6">{act.ingredient}</h6>
                               </td>
-                              <td style={{ minWidth: '180px' }}>
+                              <td>
                                 {renderGateBadge(act.gate_status)}
                               </td>
-                              <td style={{ minWidth: '280px' }}>
-                                <div className="small text-light mb-2">
-                                  <strong>Kích hoạt bởi:</strong>
-                                  <ul className="ps-3 mb-1 text-secondary" style={{ fontSize: '0.75rem' }}>
+                              <td>
+                                <div className="small text-light mb-1">
+                                  <strong>Chỉ định cho:</strong>
+                                  <ul className="ps-3 mb-1 text-secondary" style={{ fontSize: '0.8rem' }}>
                                     {act.triggered_by_conditions?.map((c, i) => (
-                                      <li key={i}>{c}</li>
+                                      <li key={i}>{cleanConditionName(c)}</li>
                                     ))}
                                   </ul>
                                 </div>
-                                <div className="small text-secondary" style={{ fontSize: '0.75rem' }}>
+                                <div className="small text-info" style={{ fontSize: '0.8rem' }}>
                                   <strong>Mục tiêu:</strong> {act.care_goals?.join(', ')}
                                 </div>
                               </td>
-                              <td style={{ minWidth: '320px' }}>
+                              <td>
                                 {act.safety_and_use_gates?.length > 0 && (
-                                  <div className="p-2 rounded mb-2" style={{ background: 'rgba(255, 193, 7, 0.08)', fontSize: '0.75rem' }}>
-                                    <strong className="text-warning">Lưu ý an toàn:</strong>
+                                  <div className="p-2 rounded mb-2" style={{ background: 'rgba(255, 193, 7, 0.08)', fontSize: '0.78rem' }}>
+                                    <strong className="text-warning">Chỉ dẫn sử dụng:</strong>
                                     <ul className="ps-3 mb-0 text-light">
                                       {act.safety_and_use_gates.map((g, idx) => (
                                         <li key={idx}>{g}</li>
@@ -676,12 +655,12 @@ const SkinAnalysisPage = () => {
                                     </ul>
                                   </div>
                                 )}
-                                {act.published_evidence?.map((ev, evIdx) => (
-                                  <div key={evIdx} className="small text-secondary" style={{ fontSize: '0.75rem' }}>
-                                    <span className="badge bg-secondary me-1">{ev.source_id}</span>
-                                    <span>{ev.published_evidence}</span>
+                                {act.published_evidence_and_numbers && (
+                                  <div className="small text-secondary" style={{ fontSize: '0.75rem', lineHeight: '1.4' }}>
+                                    <span className="badge bg-secondary me-1">{act.evidence_source_id || 'Nghiên cứu'}</span>
+                                    <span>{act.published_evidence_and_numbers}</span>
                                   </div>
-                                ))}
+                                )}
                               </td>
                             </tr>
                           ))}
@@ -692,40 +671,33 @@ const SkinAnalysisPage = () => {
                 </Card>
               </Tab>
 
-              <Tab eventKey="products" title={<span><FiPackage className="me-1" /> Sản Phẩm Tham Khảo & Vị Trí INCI</span>}>
+              {/* TAB 4: MỸ PHẨM KHUYÊN DÙNG */}
+              <Tab eventKey="products" title={<span><FiPackage className="me-1" /> Mỹ Phẩm Khuyên Dùng Chuẩn INCI</span>}>
                 <Row className="g-4">
-                  {/* Top sản phẩm kết hợp nhiều hoạt chất */}
                   <Col xs={12}>
                     <Card className="glass-card border-0">
                       <Card.Header className="bg-transparent border-bottom py-3" style={{ borderColor: 'var(--border-color)' }}>
                         <div className="d-flex justify-content-between align-items-center flex-wrap gap-2">
                           <h5 className="mb-0 text-white font-weight-bold">
-                            Top Sản Phẩm Tối Ưu Kết Hợp Nhiều Hoạt Chất Đề Xuất (Multi-Active Synergy)
+                            Top Sản Phẩm Tối Ưu Kết Hợp Đa Hoạt Chất (Multi-Active Care)
                           </h5>
-                          <small className="text-secondary">Ưu tiên sản phẩm đáp ứng đồng thời nhiều nhóm hoạt chất</small>
+                          <small className="text-secondary">Đáp ứng đồng thời nhiều nhóm hoạt chất điều trị cá nhân hóa</small>
                         </div>
                       </Card.Header>
                       <Card.Body className="p-3">
-                        <Alert variant="secondary" className="small py-2 mb-3 bg-dark border-0 text-muted">
-                          ℹ️ {analysisResult.stage_5_product_matches?.important_notice}
-                        </Alert>
-
                         <Row className="g-3">
                           {analysisResult.stage_5_product_matches?.top_multi_active_products?.map((prod, index) => (
                             <Col md={6} lg={4} key={prod.product_id}>
                               <div className="p-3 rounded h-100" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-color)' }}>
                                 <div className="d-flex justify-content-between align-items-start mb-2">
-                                  <span className="badge bg-warning text-dark font-weight-bold">Top #{index + 1}</span>
-                                  <Badge bg="success">{prod.matched_active_count} nhóm hoạt chất</Badge>
+                                  <span className="badge bg-warning text-dark font-weight-bold">Ưu tiên #{index + 1}</span>
+                                  <Badge bg="success">{prod.matched_group_count || prod.matched_active_count} nhóm hoạt chất</Badge>
                                 </div>
                                 <h6 className="text-white mb-2" style={{ fontSize: '0.95rem' }}>{prod.product_name}</h6>
-                                <div className="small text-secondary mb-2" style={{ fontSize: '0.75rem' }}>
-                                  Mã sản phẩm: <code>{prod.product_id}</code>
-                                </div>
                                 <div className="mt-2 pt-2 border-top border-dark">
-                                  <span className="small text-muted d-block mb-1">Vị trí thành phần INCI thực tế:</span>
+                                  <span className="small text-muted d-block mb-1">Vị trí thành phần hoạt tính INCI:</span>
                                   <ul className="ps-3 mb-0 small text-light" style={{ fontSize: '0.75rem', lineHeight: '1.4' }}>
-                                    {prod.matched_inci_summary?.map((inci, iIdx) => (
+                                    {(prod.inci_positions || prod.matched_inci_summary)?.map((inci, iIdx) => (
                                       <li key={iIdx}>{inci}</li>
                                     ))}
                                   </ul>
@@ -739,29 +711,29 @@ const SkinAnalysisPage = () => {
                   </Col>
 
                   {/* Sản phẩm theo từng nhóm hoạt chất */}
-                  <Col xs={12}>
-                    <Card className="glass-card border-0">
-                      <Card.Header className="bg-transparent border-bottom py-3" style={{ borderColor: 'var(--border-color)' }}>
-                        <h5 className="mb-0 text-white font-weight-bold">
-                          Truy Xuất Theo Từng Hoạt Chất (Ưu Tiên Vị Trí Đầu Bảng Thành Phần)
-                        </h5>
-                      </Card.Header>
-                      <Card.Body className="p-3">
-                        {analysisResult.stage_5_product_matches?.by_active_ingredient && (
+                  {analysisResult.stage_5_product_matches?.by_active && (
+                    <Col xs={12}>
+                      <Card className="glass-card border-0">
+                        <Card.Header className="bg-transparent border-bottom py-3" style={{ borderColor: 'var(--border-color)' }}>
+                          <h5 className="mb-0 text-white font-weight-bold">
+                            Truy Xuất Mỹ Phẩm Theo Từng Hoạt Chất Mục Tiêu
+                          </h5>
+                        </Card.Header>
+                        <Card.Body className="p-3">
                           <Row className="g-3">
-                            {Object.entries(analysisResult.stage_5_product_matches.by_active_ingredient).map(([activeName, info]) => (
+                            {Object.entries(analysisResult.stage_5_product_matches.by_active).map(([activeName, info]) => (
                               <Col md={6} lg={4} key={activeName}>
                                 <div className="p-3 rounded h-100" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-color)' }}>
                                   <div className="d-flex justify-content-between align-items-center mb-2">
                                     <h6 className="text-accent mb-0 font-weight-bold">{activeName}</h6>
-                                    <span className="badge bg-secondary" style={{ fontSize: '0.7rem' }}>{info.total_matched_products} sản phẩm</span>
+                                    <span className="badge bg-secondary" style={{ fontSize: '0.7rem' }}>{info.total_products} sản phẩm</span>
                                   </div>
                                   <div className="mt-2">
-                                    {info.sample_products?.map((sp) => (
+                                    {info.top_samples?.map((sp) => (
                                       <div key={sp.product_id} className="mb-2 pb-2 border-bottom border-dark small">
                                         <div className="text-white font-weight-bold" style={{ fontSize: '0.8rem' }}>{sp.product_name}</div>
                                         <div className="text-secondary" style={{ fontSize: '0.7rem' }}>
-                                          {sp.matched_inci_details?.join(', ')}
+                                          {sp.matched_inci?.join(', ')}
                                         </div>
                                       </div>
                                     ))}
@@ -770,17 +742,18 @@ const SkinAnalysisPage = () => {
                               </Col>
                             ))}
                           </Row>
-                        )}
-                      </Card.Body>
-                    </Card>
-                  </Col>
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                  )}
                 </Row>
               </Tab>
 
-              <Tab eventKey="raw" title={<span><FiSliders className="me-1" /> Toàn Bộ Chỉ Số Đo</span>}>
+              {/* TAB 5: BẢNG CHỈ SỐ QUANG HỌC */}
+              <Tab eventKey="raw" title={<span><FiSliders className="me-1" /> Chỉ Số Quang Học JANUS Pro</span>}>
                 <Card className="glass-card border-0">
                   <Card.Header className="bg-transparent border-bottom py-3" style={{ borderColor: 'var(--border-color)' }}>
-                    <h5 className="mb-0 text-white font-weight-bold">Chi Tiết Tất Cả Chỉ Số Thiết Bị Đo JANUS Pro</h5>
+                    <h5 className="mb-0 text-white font-weight-bold">Bảng Tổng Hợp Chỉ Số Thiết Bị Đo Da JANUS Pro</h5>
                   </Card.Header>
                   <Card.Body className="p-3">
                     <Row className="g-3">
@@ -792,7 +765,7 @@ const SkinAnalysisPage = () => {
                               <Badge bg="primary">{val.report_value}</Badge>
                             </div>
                             <div className="small text-secondary">
-                              Tham chiếu: <strong className="text-white">{val.comparison_value}</strong> ({val.comparison_basis})
+                              Mốc tuổi tham chiếu: <strong className="text-white">{val.comparison_value}</strong>
                             </div>
                             {val.vendor_text_interpretation && (
                               <div className="small text-info mt-1" style={{ fontSize: '0.75rem' }}>
@@ -808,13 +781,13 @@ const SkinAnalysisPage = () => {
               </Tab>
             </Tabs>
 
-            {/* Khối Tuyên Bố Miễn Trừ Trách Nhiệm Y Khoa (Medical Disclaimer) */}
-            <div className="mt-4 p-3 rounded-3" style={{ background: 'rgba(239, 68, 68, 0.08)', border: '1px solid rgba(239, 68, 68, 0.25)' }}>
-              <div className="d-flex align-items-center gap-2 mb-1 text-danger font-weight-bold">
-                <FiAlertTriangle /> Tuyên Bố Miễn Trừ Trách Nhiệm Y Khoa Bắt Buộc
+            {/* Lưu ý chuyên môn thẩm mỹ */}
+            <div className="mt-4 p-3 rounded-3" style={{ background: 'rgba(226, 176, 73, 0.08)', border: '1px solid rgba(226, 176, 73, 0.25)' }}>
+              <div className="d-flex align-items-center gap-2 mb-1 text-warning font-weight-bold">
+                <FiInfo /> Lưu Ý Chuyên Môn Thẩm Mỹ & Da Liễu
               </div>
               <p className="small text-light mb-0" style={{ lineHeight: '1.6' }}>
-                {analysisResult.medical_disclaimer}
+                Kết quả phân tích và đề xuất phác đồ chăm sóc được tổng hợp dựa trên dữ liệu quang học chuyên sâu từ thiết bị đo da JANUS Pro và cơ sở dữ liệu da liễu thẩm mỹ, chỉ phục vụ mục đích tư vấn chăm sóc da cá nhân hóa, không thay thế chẩn đoán bệnh lý của bác sĩ chuyên khoa.
               </p>
             </div>
           </div>

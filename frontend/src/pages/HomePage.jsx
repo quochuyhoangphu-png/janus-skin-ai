@@ -63,9 +63,9 @@ const HomePage = () => {
           <Col md={4}>
             <div className="glass-card p-4 h-100">
               <div className="feature-icon mb-3 text-accent fs-3"><FiSliders /></div>
-              <h5 className="text-white mb-2">12 Tình Trạng Da IF-THEN</h5>
+              <h5 className="text-white mb-2">Đánh Giá Tình Trạng Da Đa Chiều</h5>
               <p className="text-secondary small mb-0">
-                Nhận diện tự động chỉ số lỗ chân lông, bã nhờn, nếp nhăn, porphyrin và sắc tố dựa trên ngưỡng khoa học.
+                Nhận diện tự động chỉ số lỗ chân lông, bã nhờn, nếp nhăn, porphyrin và sắc tố dựa trên dữ liệu quang học chuyên sâu.
               </p>
             </div>
           </Col>

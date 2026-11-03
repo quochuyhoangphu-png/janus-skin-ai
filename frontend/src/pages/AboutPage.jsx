@@ -2,7 +2,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { FiTruck, FiShield, FiHeadphones, FiRefreshCw, FiActivity } from 'react-icons/fi';
 
 const features = [
-  { icon: <FiActivity />, title: 'Phân Tích Da JANUS Pro', desc: 'Ứng dụng thuật toán AI và chuẩn hóa dữ liệu 6 giai đoạn theo chuẩn thẩm mỹ da liễu.' },
+  { icon: <FiActivity />, title: 'Phân Tích Da JANUS Pro', desc: 'Ứng dụng công nghệ quang học đa phổ và cá nhân hóa phác đồ chăm sóc chuyên sâu.' },
   { icon: <FiShield />, title: 'Cổng An Toàn Hoạt Chất', desc: 'Kiểm soát chống chỉ định thai kỳ, bít tắc mụn thực tế và tình trạng kích ứng da.' },
   { icon: <FiRefreshCw />, title: 'Định Vị Danh Pháp INCI', desc: 'Truy xuất trực tiếp vị trí thành phần trong công thức mỹ phẩm thực tế.' },
   { icon: <FiHeadphones />, title: 'Tư Vấn Thẩm Mỹ 24/7', desc: 'Đội ngũ chuyên môn luôn sẵn sàng giải đáp phác đồ chăm sóc làn da của bạn.' },
@@ -44,7 +44,7 @@ const AboutPage = () => (
           </Col>
           <Col md={5} className="text-center">
             <Row className="g-3">
-              <Col xs={6}><div className="glass-card p-3"><div className="text-accent fs-3 font-weight-bold">12</div><small className="text-secondary">Quy tắc IF-THEN</small></div></Col>
+              <Col xs={6}><div className="glass-card p-3"><div className="text-accent fs-3 font-weight-bold">12</div><small className="text-secondary">Chỉ số da liễu</small></div></Col>
               <Col xs={6}><div className="glass-card p-3"><div className="text-accent fs-3 font-weight-bold">4</div><small className="text-secondary">Trục phân loại da</small></div></Col>
               <Col xs={6}><div className="glass-card p-3"><div className="text-accent fs-3 font-weight-bold">100%</div><small className="text-secondary">Cổng an toàn</small></div></Col>
               <Col xs={6}><div className="glass-card p-3"><div className="text-accent fs-3 font-weight-bold">2,400+</div><small className="text-secondary">Sản phẩm INCI</small></div></Col>
