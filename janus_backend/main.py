@@ -106,8 +106,10 @@ async def analyze_janus_pdf_file(
         analysis_result["extracted_case_data"] = case_data
         analysis_result["source_filename"] = file.filename
         return analysis_result
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Lỗi khi đọc và bóc tách tệp PDF: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Lỗi xử lý tệp PDF: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn

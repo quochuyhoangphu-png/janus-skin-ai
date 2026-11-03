@@ -782,20 +782,29 @@ const SkinAnalysisPage = () => {
                 </Row>
               </Tab>
 
-              {/* TAB 5: BẢNG CHỈ SỐ QUANG HỌC */}
-              <Tab eventKey="raw" title={<span><FiSliders className="me-1" /> Chỉ Số Quang Học JANUS Pro</span>}>
+              {/* TAB 5: BẢNG CHỈ SỐ QUANG HỌC MINH BẠCH */}
+              <Tab eventKey="raw" title={<span><FiSliders className="me-1" /> Chỉ Số Quang Học Thật {caseInput?.metadata?.detected_features_count !== undefined ? `(${caseInput.metadata.detected_features_count}/12 Bóc Tách)` : ''}</span>}>
                 <Card className="glass-card border-0">
-                  <Card.Header className="bg-transparent border-bottom py-3" style={{ borderColor: 'var(--border-color)' }}>
-                    <h5 className="mb-0 text-white font-weight-bold">Bảng Tổng Hợp Chỉ Số Thiết Bị Đo Da JANUS Pro</h5>
+                  <Card.Header className="bg-transparent border-bottom py-3 d-flex justify-content-between align-items-center flex-wrap gap-2" style={{ borderColor: 'var(--border-color)' }}>
+                    <h5 className="mb-0 text-white font-weight-bold">Bảng Kiểm Định Số Liệu Bóc Tách Trực Tiếp Từ Phiếu Đo Da</h5>
+                    {caseInput?.metadata?.detected_features_count !== undefined && (
+                      <Badge bg="success" className="px-3 py-2">
+                        Bóc tách thành công: {caseInput.metadata.detected_features_count} / 12 chỉ số từ tệp PDF
+                      </Badge>
+                    )}
                   </Card.Header>
                   <Card.Body className="p-3">
                     <Row className="g-3">
                       {caseInput?.whole_face_features && Object.entries(caseInput.whole_face_features).map(([key, val]) => (
                         <Col md={4} sm={6} key={key}>
-                          <div className="p-3 rounded" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-color)' }}>
-                            <div className="d-flex justify-content-between mb-1">
+                          <div className="p-3 rounded h-100" style={{ background: val.is_measured_from_pdf ? 'rgba(25, 135, 84, 0.12)' : 'rgba(255,255,255,0.02)', border: val.is_measured_from_pdf ? '1px solid rgba(25, 135, 84, 0.4)' : '1px solid var(--border-color)' }}>
+                            <div className="d-flex justify-content-between align-items-center mb-1">
                               <span className="text-white font-weight-bold">{val.feature_name_vi || key}</span>
-                              <Badge bg="primary">{val.report_value}</Badge>
+                              {val.is_measured_from_pdf ? (
+                                <Badge bg="success">Đo thực: {val.report_value}</Badge>
+                              ) : (
+                                <Badge bg="secondary">Không có trên phiếu này</Badge>
+                              )}
                             </div>
                             <div className="small text-secondary">
                               Mốc tuổi tham chiếu: <strong className="text-white">{val.comparison_value}</strong>
