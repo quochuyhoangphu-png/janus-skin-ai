@@ -3,10 +3,10 @@ import { Container, Row, Col, Card, Button, Form, Badge, Table, Tabs, Tab, Alert
 import {
   FiActivity, FiShield, FiAlertTriangle, FiCheckCircle, FiXCircle,
   FiFileText, FiRefreshCw, FiUser, FiInfo, FiLayers, FiPackage,
-  FiEye, FiSliders, FiHelpCircle, FiClock
+  FiEye, FiSliders, FiHelpCircle, FiClock, FiUploadCloud
 } from 'react-icons/fi';
 import { toast } from 'react-toastify';
-import { getJanusSampleCase, analyzeJanusReport } from '../services/janusService';
+import { getJanusSampleCase, analyzeJanusReport, analyzeJanusPdf } from '../services/janusService';
 
 const SkinAnalysisPage = () => {
   // Input State
@@ -23,6 +23,7 @@ const SkinAnalysisPage = () => {
   const [activeTab, setActiveTab] = useState('conditions');
   const [loading, setLoading] = useState(false);
   const [loadingSample, setLoadingSample] = useState(false);
+  const [analyzingPdf, setAnalyzingPdf] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(null);
   const [offlineNotice, setOfflineNotice] = useState(null);
   const [showJsonEditor, setShowJsonEditor] = useState(false);
@@ -97,10 +98,41 @@ const SkinAnalysisPage = () => {
     }
   };
 
-  const handleFileUpload = (e) => {
+  const handleFileUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
+    // 1. Nếu người dùng chọn tệp PDF xuất ra từ máy soi da
+    if (file.name.toLowerCase().endsWith('.pdf')) {
+      setAnalyzingPdf(true);
+      try {
+        toast.info(`Đang bóc tách dữ liệu từ phiếu đo da PDF "${file.name}"...`);
+        const res = await analyzeJanusPdf(file, safetyContext);
+        if (res.data) {
+          if (res.data.extracted_case_data) {
+            setCaseInput(res.data.extracted_case_data);
+            setJsonText(JSON.stringify(res.data.extracted_case_data, null, 2));
+            if (res.data.extracted_case_data.user_safety_context) {
+              setSafetyContext({
+                is_pregnant_or_breastfeeding: !!res.data.extracted_case_data.user_safety_context.is_pregnant_or_breastfeeding,
+                has_visible_comedones_confirmed: !!res.data.extracted_case_data.user_safety_context.has_visible_comedones_confirmed,
+                known_allergies: (res.data.extracted_case_data.user_safety_context.known_allergies || []).join(', '),
+                skin_currently_irritated: !!res.data.extracted_case_data.user_safety_context.skin_currently_irritated,
+              });
+            }
+          }
+          setAnalysisResult(res.data);
+          toast.success(`Đã đọc thành công phiếu PDF "${file.name}" và hoàn tất phân tích AI thực tế!`);
+        }
+      } catch (err) {
+        toast.error('Lỗi khi phân tích tệp PDF: ' + err.message);
+      } finally {
+        setAnalyzingPdf(false);
+      }
+      return;
+    }
+
+    // 2. Nếu người dùng chọn tệp JSON
     const reader = new FileReader();
     reader.onload = (event) => {
       try {
@@ -115,7 +147,7 @@ const SkinAnalysisPage = () => {
             skin_currently_irritated: !!parsed.user_safety_context.skin_currently_irritated,
           });
         }
-        toast.success(`Đã nạp tệp báo cáo ${file.name} thành công!`);
+        toast.success(`Đã nạp tệp báo cáo ${file.name} thành công! Bấm "Bắt đầu phân tích AI" để chạy.`);
       } catch {
         toast.error('Tệp không đúng định dạng JSON hợp lệ!');
       }
@@ -216,21 +248,26 @@ const SkinAnalysisPage = () => {
               <FiFileText style={{ color: 'var(--accent)', fontSize: '1.25rem' }} />
               <h5 className="mb-0 text-white font-weight-bold">Báo Cáo Đo Da & Bối Cảnh An Toàn</h5>
             </div>
-            <div className="d-flex gap-2">
-              <Button
-                variant="outline-warning"
-                size="sm"
-                onClick={loadSampleCaseData}
-                disabled={loadingSample || loading}
-                className="d-flex align-items-center gap-1"
-              >
-                {loadingSample ? <Spinner size="sm" animation="border" /> : <FiRefreshCw />}
-                Tải lại Ca Mẫu (CASE_DEID_001)
-              </Button>
+            <div className="d-flex flex-wrap gap-2">
+              <label className="btn btn-warning btn-sm mb-0 d-flex align-items-center gap-1 cursor-pointer fw-bold shadow-sm">
+                {analyzingPdf ? <Spinner size="sm" animation="border" /> : <FiUploadCloud />}
+                {analyzingPdf ? 'Đang bóc tách PDF...' : 'Tải Phiếu Đo Da (.PDF)'}
+                <input type="file" accept=".pdf" onChange={handleFileUpload} style={{ display: 'none' }} disabled={analyzingPdf} />
+              </label>
               <label className="btn btn-outline-info btn-sm mb-0 d-flex align-items-center gap-1 cursor-pointer">
                 <FiPackage /> Nạp Tệp JSON
                 <input type="file" accept=".json" onChange={handleFileUpload} style={{ display: 'none' }} />
               </label>
+              <Button
+                variant="outline-secondary"
+                size="sm"
+                onClick={loadSampleCaseData}
+                disabled={loadingSample || loading || analyzingPdf}
+                className="d-flex align-items-center gap-1"
+              >
+                {loadingSample ? <Spinner size="sm" animation="border" /> : <FiRefreshCw />}
+                Nạp Ca Mẫu
+              </Button>
               <Button
                 variant="outline-secondary"
                 size="sm"
@@ -401,6 +438,15 @@ const SkinAnalysisPage = () => {
         {/* KHU VỰC HIỂN THỊ KẾT QUẢ PHÂN TÍCH */}
         {analysisResult && (
           <div className="analysis-results-section mt-4">
+            {analysisResult.source_filename && (
+              <Alert variant="success" className="d-flex align-items-center justify-content-between py-2 px-3 mb-4 rounded-3 border-0 shadow-sm" style={{ background: 'rgba(25, 135, 84, 0.2)', border: '1px solid rgba(25, 135, 84, 0.4)' }}>
+                <div className="d-flex align-items-center gap-2 text-white">
+                  <FiCheckCircle className="text-success fs-5" />
+                  <span>Đang hiển thị kết quả phân tích thực tế từ tệp PDF: <strong className="text-warning">{analysisResult.source_filename}</strong></span>
+                </div>
+                <Badge bg="success" className="px-2 py-1">Bóc tách PDF thực tế</Badge>
+              </Alert>
+            )}
             <div className="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
               <h3 className="section-title mb-0">Kết Quả Phân Tích & Tư Vấn Da Liễu</h3>
               <Badge bg="success" className="px-3 py-2 fs-6">
