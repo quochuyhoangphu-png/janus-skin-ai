@@ -253,6 +253,56 @@ PRODUCT_DATABASE = {
     ]
 }
 
+# BẢNG ÁNH XẠ HOẠT CHẤT MỤC TIÊU THEO TÌNH TRẠNG DA (GIAI ĐOẠN 4 & 5 TRUY XUẤT)
+CONDITION_ACTIVE_MAPPING = {
+    "SC_PORE_VISIBILITY": [
+        {"name": "Niacinamide (2 - 5%)", "role": "Thu nhỏ lỗ chân lông, củng cố thành nang lông & điều tiết dầu", "type": "first-line"},
+        {"name": "Salicylic Acid (BHA 1 - 2%)", "role": "Làm sạch sâu bít tắc cổ nang lông (khi có nhân mụn)", "type": "clarifying"}
+    ],
+    "SC_WRINKLE_FEATURES": [
+        {"name": "Retinoid / Retinol", "role": "Kích thích nguyên bào sợi sản sinh collagen, tái tạo cấu trúc da", "type": "anti-aging"},
+        {"name": "Peptides", "role": "Tái thiết lập độ săn chắc, làm mờ rãnh nhăn biểu cảm", "type": "firming"},
+        {"name": "Glycerin", "role": "Dưỡng ẩm sâu, làm đầy rãnh nhăn nông do mất nước bề mặt", "type": "hydration"}
+    ],
+    "SC_LOW_ELASTICITY_REPORTED": [
+        {"name": "Peptides", "role": "Tăng cường mật độ trung bì, cải thiện độ đàn hồi hồi phục", "type": "firming"},
+        {"name": "Ceramides", "role": "Củng cố màng lipid kép, ngăn ngừa thoái hóa mô nâng đỡ", "type": "barrier"}
+    ],
+    "SC_PIGMENTATION_SIGNAL": [
+        {"name": "Vitamin C (Ascorbic Acid)", "role": "Ức chế enzyme tyrosinase, mờ đốm nâu và chống oxy hóa", "type": "brightening"},
+        {"name": "Azelaic Acid", "role": "Ức chế chọn lọc tế bào hắc tố hoạt động quá mức, kháng viêm", "type": "brightening"},
+        {"name": "Niacinamide", "role": "Ngăn chặn melanosome chuyển dịch lên tế bào sừng bề mặt", "type": "brightening"}
+    ],
+    "SC_UV_PIGMENTATION": [
+        {"name": "Vitamin C (Ascorbic Acid)", "role": "Trung hòa gốc tự do do tia UV, ức chế cụm hắc tố ngầm", "type": "antioxidant"}
+    ],
+    "SC_SEBUM_DISTRIBUTION": [
+        {"name": "Niacinamide (2 - 5%)", "role": "Cân bằng tuyến bã nhờn, phân bố lại dầu vùng chữ T và U", "type": "sebum-control"}
+    ],
+    "SC_PORPHYRIN_SIGNAL": [
+        {"name": "Salicylic Acid (BHA)", "role": "Tan trong dầu, tiêu sừng bít tắc, kiểm soát vi khuẩn C. acnes", "type": "anti-acne"}
+    ],
+    "SC_TONE_VARIATION": [
+        {"name": "Vitamin C", "role": "Đồng đều sắc thái da, làm sáng tổng thể khuôn mặt", "type": "brightening"},
+        {"name": "Azelaic Acid", "role": "Cải thiện sự đồng nhất màu da giữa các vùng má và trán", "type": "tone-evening"}
+    ],
+    "SC_REDNESS_LOCAL_REVIEW": [
+        {"name": "Panthenol (Pro-Vitamin B5)", "role": "Làm dịu cấp tốc, phục hồi mao mạch và giảm kích ứng", "type": "soothing"},
+        {"name": "Ceramides", "role": "Tái lập hàng rào bảo vệ tự nhiên, giảm độ nhạy cảm", "type": "barrier"}
+    ],
+    "SC_MOISTURE_STATUS": [
+        {"name": "Glycerin", "role": "Hút ẩm đa tầng, cân bằng nước nội biểu bì", "type": "hydration"},
+        {"name": "Ceramides", "role": "Khóa ẩm sinh học, giảm mất nước qua biểu bì (TEWL)", "type": "barrier"}
+    ],
+    "SC_TEXTURE_STATUS": [
+        {"name": "Niacinamide", "role": "Cải thiện bề mặt lớp sừng, làm mịn màng kết cấu da", "type": "texture"},
+        {"name": "Ceramides", "role": "Duy trì độ mịn màng và độ ẩm cân bằng", "type": "barrier"}
+    ],
+    "SC_UNDER_EYE_DARKNESS": [
+        {"name": "Niacinamide (Eye Formula)", "role": "Tăng cường vi tuần hoàn, giảm quầng thâm vùng hốc mắt", "type": "eye-care"}
+    ]
+}
+
 TOP_MULTI_ACTIVE_PRODUCTS = [
     {
         "product_id": "COS_00360",
@@ -530,7 +580,8 @@ class JanusExpertSystem:
                 "confidence": meta["confidence"],
                 "not_established": meta["not_established"],
                 "recommendation_status": meta["recommendation_status"],
-                "metrics_detail": metrics_detail
+                "metrics_detail": metrics_detail,
+                "target_active_ingredients": CONDITION_ACTIVE_MAPPING.get(cid, [])
             })
 
         return results

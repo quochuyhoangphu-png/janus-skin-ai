@@ -1,12 +1,62 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Form, Badge, Table, Tabs, Tab, Alert, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Form, Badge, Table, Tabs, Tab, Alert, Spinner, Modal } from 'react-bootstrap';
 import {
   FiActivity, FiShield, FiAlertTriangle, FiCheckCircle, FiXCircle,
   FiFileText, FiRefreshCw, FiUser, FiInfo, FiLayers, FiPackage,
-  FiEye, FiSliders, FiHelpCircle, FiClock, FiUploadCloud
+  FiEye, FiSliders, FiHelpCircle, FiClock, FiUploadCloud, FiSearch
 } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import { getJanusSampleCase, analyzeJanusReport, analyzeJanusPdf } from '../services/janusService';
+
+// Bảng ánh xạ hoạt chất mục tiêu chuẩn khoa học da liễu thẩm mỹ theo từng vấn đề da
+const CONDITION_ACTIVES_MAP = {
+  SC_PORE_VISIBILITY: [
+    { name: "Niacinamide (2 - 5%)", role: "Củng cố thành nang lông, điều tiết bã nhờn, thu nhỏ lỗ chân lông", tag: "primary" },
+    { name: "Salicylic Acid (BHA 1 - 2%)", role: "Tan trong dầu, làm sạch sâu bít tắc cổ nang lông", tag: "clarifying" }
+  ],
+  SC_WRINKLE_FEATURES: [
+    { name: "Retinoid / Retinol", role: "Kích thích tăng sinh collagen trung bì, tái tạo nền da", tag: "anti-aging" },
+    { name: "Peptides", role: "Tái thiết lập độ săn chắc, làm mờ rãnh nhăn nông & biểu cảm", tag: "firming" },
+    { name: "Glycerin", role: "Dưỡng ẩm sâu bề mặt, làm đầy rãnh nhăn mất nước", tag: "hydration" }
+  ],
+  SC_LOW_ELASTICITY_REPORTED: [
+    { name: "Peptides", role: "Phục hồi độ đàn hồi và mật độ mô liên kết trung bì", tag: "firming" },
+    { name: "Ceramides", role: "Củng cố màng lipid kép, bảo vệ mô nâng đỡ biểu bì", tag: "barrier" }
+  ],
+  SC_PIGMENTATION_SIGNAL: [
+    { name: "Vitamin C (Ascorbic Acid)", role: "Ức chế enzyme tyrosinase, làm sáng đốm nâu", tag: "brightening" },
+    { name: "Azelaic Acid", role: "Ức chế chọn lọc tế bào hắc tố bất thường, kháng viêm", tag: "brightening" },
+    { name: "Niacinamide", role: "Ngăn chặn melanosome chuyển dịch lên tế bào sừng", tag: "brightening" }
+  ],
+  SC_UV_PIGMENTATION: [
+    { name: "Vitamin C (Ascorbic Acid)", role: "Trung hòa gốc tự do UV, ngăn cụm hắc tố ngầm phát triển", tag: "antioxidant" }
+  ],
+  SC_SEBUM_DISTRIBUTION: [
+    { name: "Niacinamide (2 - 5%)", role: "Cân bằng tuyến bã nhờn toàn mặt, giảm dầu vùng chữ T", tag: "sebum-control" }
+  ],
+  SC_PORPHYRIN_SIGNAL: [
+    { name: "Salicylic Acid (BHA)", role: "Tan trong dầu, tiêu sừng, kiểm soát vi khuẩn mụn C. acnes", tag: "anti-acne" }
+  ],
+  SC_TONE_VARIATION: [
+    { name: "Vitamin C", role: "Làm sáng và đều màu da toàn diện giữa các phân vùng", tag: "brightening" },
+    { name: "Azelaic Acid", role: "Cải thiện sắc thái da, mờ thâm cục bộ", tag: "tone-evening" }
+  ],
+  SC_REDNESS_LOCAL_REVIEW: [
+    { name: "Panthenol (Pro-Vitamin B5)", role: "Làm dịu cấp tốc, giảm đỏ da và phục hồi mao mạch", tag: "soothing" },
+    { name: "Ceramides", role: "Tái tạo hàng rào biểu bì, giảm độ nhạy cảm ngoại lai", tag: "barrier" }
+  ],
+  SC_MOISTURE_STATUS: [
+    { name: "Glycerin", role: "Hút ẩm đa tầng, cân bằng nước nội biểu bì", tag: "hydration" },
+    { name: "Ceramides", role: "Khóa ẩm sinh học, giảm mất nước qua biểu bì (TEWL)", tag: "barrier" }
+  ],
+  SC_TEXTURE_STATUS: [
+    { name: "Niacinamide", role: "Cải thiện bề mặt lớp sừng, làm mịn màng kết cấu da", tag: "texture" },
+    { name: "Ceramides", role: "Duy trì độ mịn màng và độ ẩm cân bằng", tag: "barrier" }
+  ],
+  SC_UNDER_EYE_DARKNESS: [
+    { name: "Niacinamide (Chuyên Vùng Mắt)", role: "Tăng cường tuần hoàn vi mạch dưới mắt, giảm sắc tố", tag: "eye-care" }
+  ]
+};
 
 const SkinAnalysisPage = () => {
   // Input State
@@ -27,6 +77,8 @@ const SkinAnalysisPage = () => {
   const [analysisResult, setAnalysisResult] = useState(null);
   const [offlineNotice, setOfflineNotice] = useState(null);
   const [showJsonEditor, setShowJsonEditor] = useState(false);
+  const [uploadError, setUploadError] = useState(null);
+  const [showAuditModal, setShowAuditModal] = useState(false);
 
   // Tự động tải ca mẫu ban đầu
   useEffect(() => {
@@ -116,6 +168,8 @@ const SkinAnalysisPage = () => {
     const file = e.target.files[0];
     if (!file) return;
 
+    setUploadError(null);
+
     // 1. Tệp PDF từ máy đo da
     if (file.name.toLowerCase().endsWith('.pdf')) {
       setAnalyzingPdf(true);
@@ -139,7 +193,9 @@ const SkinAnalysisPage = () => {
           toast.success(`Đã phân tích thành công phiếu kết quả đo da "${file.name}"!`);
         }
       } catch (err) {
-        toast.error('Lỗi khi phân tích tệp PDF: ' + err.message);
+        const msg = err.message || 'Không thể xử lý tệp PDF.';
+        setUploadError(msg);
+        toast.error('Lỗi khi phân tích tệp PDF: ' + msg, { autoClose: 9000 });
       } finally {
         setAnalyzingPdf(false);
       }
@@ -258,6 +314,16 @@ const SkinAnalysisPage = () => {
           <Alert variant="warning" className="d-flex align-items-center gap-2 py-2">
             <FiInfo className="flex-shrink-0" />
             <small>{offlineNotice}</small>
+          </Alert>
+        )}
+
+        {uploadError && (
+          <Alert variant="danger" dismissible onClose={() => setUploadError(null)} className="d-flex align-items-start gap-2 py-3 mb-4 shadow-sm" style={{ background: 'rgba(239, 68, 68, 0.18)', border: '1px solid rgba(239, 68, 68, 0.4)' }}>
+            <FiAlertTriangle className="text-danger fs-4 flex-shrink-0 mt-1" />
+            <div>
+              <strong className="text-white">Thông báo từ Hệ thống Kiểm định:</strong>
+              <div className="text-light mt-1 small" style={{ lineHeight: '1.5' }}>{uploadError}</div>
+            </div>
           </Alert>
         )}
 
@@ -458,20 +524,40 @@ const SkinAnalysisPage = () => {
         {analysisResult && (
           <div className="analysis-results-section mt-4">
             {analysisResult.source_filename && (
-              <Alert variant="success" className="d-flex align-items-center justify-content-between py-2 px-3 mb-4 rounded-3 border-0 shadow-sm" style={{ background: 'rgba(25, 135, 84, 0.2)', border: '1px solid rgba(25, 135, 84, 0.4)' }}>
+              <Alert variant="success" className="d-flex align-items-center justify-content-between py-2 px-3 mb-4 rounded-3 border-0 shadow-sm flex-wrap gap-2" style={{ background: 'rgba(25, 135, 84, 0.2)', border: '1px solid rgba(25, 135, 84, 0.4)' }}>
                 <div className="d-flex align-items-center gap-2 text-white">
                   <FiCheckCircle className="text-success fs-5" />
-                  <span>Đang hiển thị kết quả phân tích thực tế từ tệp PDF: <strong className="text-warning">{analysisResult.source_filename}</strong></span>
+                  <span>Đang hiển thị kết quả phân tích thực tế từ tệp: <strong className="text-warning">{analysisResult.source_filename}</strong></span>
                 </div>
-                <Badge bg="success" className="px-2 py-1">Bóc Tách PDF Thực Tế</Badge>
+                <div className="d-flex align-items-center gap-2">
+                  <Badge bg="success" className="px-2 py-1">Bóc Tách Dữ Liệu Thực Tế</Badge>
+                  <Button
+                    variant="outline-light"
+                    size="sm"
+                    className="py-0 px-2 small d-flex align-items-center gap-1"
+                    onClick={() => setShowAuditModal(true)}
+                  >
+                    <FiSearch /> Đối Chiếu Số Liệu Đo Gốc
+                  </Button>
+                </div>
               </Alert>
             )}
 
             <div className="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
               <h3 className="section-title mb-0">Hồ Sơ Đánh Giá & Phác Đồ Trị Liệu Thẩm Mỹ</h3>
-              <Badge bg="success" className="px-3 py-2 fs-6">
-                <FiCheckCircle className="me-1" /> Ca phân tích: {analysisResult.metadata_and_version_check?.case_id}
-              </Badge>
+              <div className="d-flex align-items-center gap-2">
+                <Button
+                  variant="outline-info"
+                  size="sm"
+                  className="d-flex align-items-center gap-1"
+                  onClick={() => setShowAuditModal(true)}
+                >
+                  <FiSearch /> Bảng Số Liệu Đo Da (Audit)
+                </Button>
+                <Badge bg="success" className="px-3 py-2 fs-6">
+                  <FiCheckCircle className="me-1" /> Ca phân tích: {analysisResult.metadata_and_version_check?.case_id}
+                </Badge>
+              </div>
             </div>
 
             {/* Thanh Tabs phân tầng kết quả */}
@@ -480,13 +566,82 @@ const SkinAnalysisPage = () => {
               onSelect={(k) => setActiveTab(k)}
               className="mb-4 custom-nav-tabs"
             >
-              {/* TAB 1: ĐÁNH GIÁ TÌNH TRẠNG DA */}
-              <Tab eventKey="conditions" title={<span><FiActivity className="me-1" /> Tình Trạng Da Toàn Diện</span>}>
+              {/* TAB 1: ĐÁNH GIÁ TÌNH TRẠNG DA & HOẠT CHẤT HỖ TRỢ ĐỀ XUẤT */}
+              <Tab eventKey="conditions" title={<span><FiActivity className="me-1" /> Tình Trạng Da & Hoạt Chất Mục Tiêu</span>}>
+                {/* Hộp Tổng Hợp Hoạt Chất Đề Xuất Theo Tình Trạng Da */}
+                <div className="p-3 mb-4 rounded-3" style={{ background: 'linear-gradient(135deg, rgba(226, 176, 73, 0.12), rgba(15, 23, 42, 0.6))', border: '1px solid rgba(226, 176, 73, 0.35)' }}>
+                  <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+                    <div className="d-flex align-items-center gap-2">
+                      <FiShield style={{ color: 'var(--accent)', fontSize: '1.25rem' }} />
+                      <h6 className="mb-0 text-white font-weight-bold">Tổng Hợp Hoạt Chất Trọng Tâm Đề Xuất Cho Ca Đo Này</h6>
+                    </div>
+                    <Button
+                      variant="warning"
+                      size="sm"
+                      className="py-1 px-3 d-flex align-items-center gap-1 font-weight-bold shadow-sm"
+                      onClick={() => setActiveTab('actives')}
+                    >
+                      Xem Toàn Bộ Phác Đồ & Bằng Chứng Khoa Học &rarr;
+                    </Button>
+                  </div>
+                  <p className="small text-light mb-3" style={{ opacity: 0.9 }}>
+                    Hệ thống đã tự động ánh xạ tình trạng da thực tế qua <strong>Cầu Nối Hoạt Chất (Ingredient Bridge)</strong> và kiểm duyệt an toàn (Use Gate) để đưa ra các nhóm hoạt chất trị liệu tối ưu:
+                  </p>
+                  <div className="d-flex flex-wrap gap-2">
+                    {(() => {
+                      // Tổng hợp danh sách hoạt chất duy nhất cho các tình trạng cần can thiệp (code = 2)
+                      const triggered = analysisResult.stage_2_skin_conditions?.filter(c => c.status_code === 2) || [];
+                      const activeMap = {};
+                      triggered.forEach(c => {
+                        const list = c.target_active_ingredients || CONDITION_ACTIVES_MAP[c.condition_id] || [];
+                        list.forEach(a => {
+                          const name = a.name || a.ingredient;
+                          if (!activeMap[name]) {
+                            activeMap[name] = { ...a, reasons: [c.display_name_vi] };
+                          } else {
+                            if (!activeMap[name].reasons.includes(c.display_name_vi)) {
+                              activeMap[name].reasons.push(c.display_name_vi);
+                            }
+                          }
+                        });
+                      });
+
+                      const entries = Object.values(activeMap);
+                      if (entries.length === 0) {
+                        return (
+                          <div className="text-success small d-flex align-items-center gap-1">
+                            <FiCheckCircle /> Các chỉ số đo da đều trong ngưỡng an toàn ổn định. Duy trì phác đồ cấp ẩm & chống nắng cơ bản (Glycerin, Ceramides, SPF 30+).
+                          </div>
+                        );
+                      }
+
+                      return entries.map((act, idx) => (
+                        <div
+                          key={idx}
+                          className="px-3 py-2 rounded-2 d-flex flex-column"
+                          style={{ background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(226, 176, 73, 0.25)', maxWidth: '320px' }}
+                        >
+                          <div className="d-flex align-items-center justify-content-between gap-1 mb-1">
+                            <strong className="text-warning small">{act.name}</strong>
+                            <Badge bg="secondary" style={{ fontSize: '0.65rem' }}>Trị liệu</Badge>
+                          </div>
+                          <div className="text-light small mb-1" style={{ fontSize: '0.78rem', lineHeight: '1.3' }}>
+                            {act.role}
+                          </div>
+                          <div className="text-secondary small" style={{ fontSize: '0.7rem' }}>
+                            Mục tiêu: {act.reasons.join(', ')}
+                          </div>
+                        </div>
+                      ));
+                    })()}
+                  </div>
+                </div>
+
                 <Card className="glass-card border-0">
                   <Card.Header className="bg-transparent border-bottom py-3" style={{ borderColor: 'var(--border-color)' }}>
                     <div className="d-flex justify-content-between align-items-center flex-wrap gap-2">
                       <h5 className="mb-0 text-white font-weight-bold">
-                        Đánh Giá Chi Tiết Tình Trạng Da Toàn Diện
+                        Bảng Đánh Giá Tình Trạng Da & Hoạt Chất Chỉ Định Tương Ứng
                       </h5>
                       <div>
                         <Badge bg="danger" className="me-2 px-2 py-1">
@@ -503,27 +658,58 @@ const SkinAnalysisPage = () => {
                       <Table className="table-dark-custom align-middle mb-0" hover>
                         <thead>
                           <tr>
-                            <th style={{ width: '28%' }}>Chỉ Số & Vấn Đề Da</th>
-                            <th style={{ width: '22%' }}>Đánh Giá Lâm Sàng</th>
-                            <th style={{ width: '50%' }}>Phân Tích Chi Tiết & Căn Cứ Điểm Đo Thiết Bị</th>
+                            <th style={{ width: '20%' }}>Chỉ Số & Vấn Đề Da</th>
+                            <th style={{ width: '15%' }}>Đánh Giá</th>
+                            <th style={{ width: '37%' }}>Hoạt Chất Hỗ Trợ Đề Xuất (Target Actives)</th>
+                            <th style={{ width: '28%' }}>Căn Cứ Phân Tích & Điểm Đo Thiết Bị</th>
                           </tr>
                         </thead>
                         <tbody>
-                          {analysisResult.stage_2_skin_conditions?.map((item) => (
-                            <tr key={item.condition_id} style={{ background: item.status_code === 2 ? 'rgba(239, 68, 68, 0.05)' : 'transparent' }}>
-                              <td>
-                                <div className="font-weight-bold text-white fs-6">{item.display_name_vi}</div>
-                              </td>
-                              <td>
-                                {renderConditionBadge(item.status_code)}
-                              </td>
-                              <td>
-                                <div className="small text-light" style={{ lineHeight: '1.6' }}>
-                                  {item.evaluation_basis}
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
+                          {analysisResult.stage_2_skin_conditions?.map((item) => {
+                            const isTriggered = item.status_code === 2;
+                            const actives = item.target_active_ingredients || CONDITION_ACTIVES_MAP[item.condition_id] || [];
+                            return (
+                              <tr key={item.condition_id} style={{ background: isTriggered ? 'rgba(239, 68, 68, 0.06)' : 'transparent' }}>
+                                <td>
+                                  <div className="font-weight-bold text-white fs-6">{item.display_name_vi}</div>
+                                  <small className="text-secondary">{item.condition_id}</small>
+                                </td>
+                                <td>
+                                  {renderConditionBadge(item.status_code)}
+                                </td>
+                                <td>
+                                  {actives.length > 0 ? (
+                                    <div className="d-flex flex-column gap-2">
+                                      {actives.map((act, aIdx) => (
+                                        <div key={aIdx} className="p-1 rounded" style={{ background: isTriggered ? 'rgba(255, 193, 7, 0.08)' : 'rgba(255, 255, 255, 0.02)' }}>
+                                          <div className="d-flex align-items-center gap-1 mb-1">
+                                            <Badge
+                                              bg={isTriggered ? (act.tag === 'primary' || act.type === 'first-line' ? 'warning' : 'info') : 'secondary'}
+                                              text={isTriggered && (act.tag === 'primary' || act.type === 'first-line') ? 'dark' : 'white'}
+                                              className="px-2 py-1 fw-bold"
+                                              style={{ fontSize: '0.78rem' }}
+                                            >
+                                              {act.name || act.ingredient}
+                                            </Badge>
+                                          </div>
+                                          <div className="text-light" style={{ fontSize: '0.78rem', lineHeight: '1.4' }}>
+                                            {act.role || act.action}
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  ) : (
+                                    <span className="small text-secondary">Duy trì chăm sóc bảo tồn hàng rào da</span>
+                                  )}
+                                </td>
+                                <td>
+                                  <div className="small text-light" style={{ lineHeight: '1.6' }}>
+                                    {item.evaluation_basis}
+                                  </div>
+                                </td>
+                              </tr>
+                            );
+                          })}
                         </tbody>
                       </Table>
                     </div>
@@ -834,6 +1020,71 @@ const SkinAnalysisPage = () => {
             </div>
           </div>
         )}
+
+        {/* Modal Đối Chiếu Dữ Liệu Bóc Tách PDF */}
+        <Modal show={showAuditModal} onHide={() => setShowAuditModal(false)} size="lg" centered>
+          <Modal.Header closeButton className="bg-dark text-white border-secondary">
+            <Modal.Title className="fs-5 d-flex align-items-center gap-2">
+              <FiSearch className="text-warning" /> Bảng Kiểm Định Dữ Liệu Đo Da Thực Tế Từ Phiếu PDF
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body className="bg-dark text-light p-4">
+            <div className="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary">
+              <div>
+                <div>Mã ca: <strong className="text-white">{caseInput?.metadata?.case_id || 'PDF_UPLOADED'}</strong></div>
+                <div className="small text-secondary">Tệp nguồn: {analysisResult?.source_filename || 'Phiếu đo da'}</div>
+              </div>
+              <div className="text-end">
+                <Badge bg="success" className="px-2 py-1">
+                  Đã bóc tách: {caseInput?.metadata?.detected_features_count ?? 12} / 12 chỉ số
+                </Badge>
+              </div>
+            </div>
+
+            <Table className="table-dark-custom align-middle mb-0" hover responsive>
+              <thead>
+                <tr>
+                  <th>Chỉ Số Quang Học</th>
+                  <th>Giá Trị Đo Thực (PDF)</th>
+                  <th>Mốc Tuổi Chuẩn</th>
+                  <th>Trạng Thái Bóc Tách</th>
+                </tr>
+              </thead>
+              <tbody>
+                {caseInput?.whole_face_features && Object.entries(caseInput.whole_face_features).map(([key, val]) => (
+                  <tr key={key}>
+                    <td>
+                      <div className="text-white font-weight-bold">{val.feature_name_vi || key}</div>
+                      <small className="text-secondary">{key}</small>
+                    </td>
+                    <td>
+                      {val.is_measured_from_pdf !== false ? (
+                        <span className="text-warning font-weight-bold fs-6">{val.report_value}</span>
+                      ) : (
+                        <span className="text-muted">—</span>
+                      )}
+                    </td>
+                    <td>
+                      <span className="text-light">{val.comparison_value}</span>
+                    </td>
+                    <td>
+                      {val.is_measured_from_pdf !== false ? (
+                        <Badge bg="success">Đã bóc tách từ phiếu</Badge>
+                      ) : (
+                        <Badge bg="secondary">Không có trên phiếu này</Badge>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </Modal.Body>
+          <Modal.Footer className="bg-dark border-secondary">
+            <Button variant="outline-light" onClick={() => setShowAuditModal(false)}>
+              Đóng Bảng Kiểm Định
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </Container>
     </div>
   );

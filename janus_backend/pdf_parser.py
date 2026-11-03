@@ -110,12 +110,13 @@ def parse_janus_pdf(pdf_bytes: bytes) -> Dict[str, Any]:
                 except:
                     pass
 
-    # TIÊU CHUẨN XÁC THỰC NGHIÊM NGẶT:
-    # Nếu không có từ khóa chuyên môn đo da HOẶC không trích xuất được tối thiểu 2 chỉ số thực tế:
-    if len(keyword_matches) < 2 and len(detected_features) < 2:
+    # TIÊU CHUẨN XÁC THỰC NGHIÊM NGẶT (CHỐNG FILE GIẢ / FILE KHÔNG LIÊN QUAN):
+    # Phiếu đo da hợp lệ bắt buộc phải trích xuất được tối thiểu 1 chỉ số quang học số hoặc có ít nhất 3 từ khóa chuyên sâu
+    if len(detected_features) == 0 or (len(detected_features) < 2 and len(keyword_matches) < 2):
         raise ValueError(
             "Tệp PDF tải lên không phải là phiếu kết quả đo da hợp lệ! "
             "Hệ thống không tìm thấy các chỉ số phân tích quang học (như Lỗ chân lông, Bã nhờn, Nếp nhăn, Porphyrin, Độ ẩm, Sắc tố...). "
+            "Hệ thống từ chối phân tích các tệp không liên quan để đảm bảo tính trung thực và chuẩn xác khoa học. "
             "Vui lòng tải đúng phiếu kết quả xuất ra từ thiết bị đo da chuyên dụng (JANUS Pro, Visia, A-One...)."
         )
 

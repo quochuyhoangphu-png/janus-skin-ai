@@ -2,13 +2,43 @@ import axios from 'axios';
 import sampleCaseInputData from '../data/sample_case_input.json';
 import sampleFullApiResponseData from '../data/sample_full_api_response.json';
 
-const RAW_BASE = import.meta.env.VITE_JANUS_API_URL || 'http://localhost:8000';
-const JANUS_API_BASE = (RAW_BASE || '').trim().replace(/\/+$/, '');
+// Xác định địa chỉ Backend API tự động thích ứng môi trường (Local / Vercel Cloud)
+const resolveApiBase = () => {
+  let envUrl = import.meta.env.VITE_JANUS_API_URL;
+  const isBrowser = typeof window !== 'undefined';
+  const isLocalHost = isBrowser && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+  if (!envUrl || (!isLocalHost && envUrl.includes('localhost'))) {
+    // Nếu chạy trên Vercel hoặc mạng công khai, ưu tiên kết nối máy chủ Render chính thức
+    envUrl = 'https://janus-skin-ai.onrender.com';
+  }
+
+  let cleaned = (envUrl || '').trim().replace(/\/+$/, '');
+  if (cleaned.endsWith('/api')) {
+    cleaned = cleaned.slice(0, -4);
+  }
+  return cleaned || 'https://janus-skin-ai.onrender.com';
+};
+
+const JANUS_API_BASE = resolveApiBase();
 
 const janusClient = axios.create({
   baseURL: JANUS_API_BASE,
-  timeout: 45000,
+  timeout: 60000,
 });
+
+const extractErrorMessage = (err, defaultMsg) => {
+  if (err.response?.data?.detail) {
+    const detail = err.response.data.detail;
+    if (typeof detail === 'string') return detail;
+    if (Array.isArray(detail)) return detail.map(d => d.msg || d.detail || JSON.stringify(d)).join('; ');
+    return JSON.stringify(detail);
+  }
+  if (err.response?.status === 404) {
+    return 'Dịch vụ phân tích (404 Not Found). Máy chủ Render đang khởi động hoặc chưa hoàn tất triển khai bản mới. Vui lòng thử lại sau giây lát.';
+  }
+  return err.message || defaultMsg;
+};
 
 /**
  * Tải ca đo mẫu chuẩn JANUS Pro (CASE_DEID_001)
@@ -33,7 +63,7 @@ export const analyzeJanusReport = async (payload) => {
     });
     return { data: res.data, isLive: true };
   } catch (err) {
-    throw new Error(err.response?.data?.detail || err.message || 'Không thể kết nối đến máy chủ phân tích da FastAPI.');
+    throw new Error(extractErrorMessage(err, 'Không thể kết nối đến máy chủ phân tích da FastAPI.'));
   }
 };
 
@@ -57,7 +87,7 @@ export const analyzeJanusPdf = async (file, safetyContext = {}) => {
     });
     return { data: res.data, isLive: true };
   } catch (err) {
-    throw new Error(err.response?.data?.detail || err.message || 'Không thể bóc tách hoặc phân tích tệp PDF.');
+    throw new Error(extractErrorMessage(err, 'Không thể bóc tách hoặc phân tích tệp PDF.'));
   }
 };
 

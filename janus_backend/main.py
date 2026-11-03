@@ -40,16 +40,22 @@ class JanusCaseRequest(BaseModel):
     skin_type_report: Dict[str, Any]
 
 @app.get("/")
+@app.get("/api")
+@app.get("/api/")
 def health_check():
     return {
         "status": "online",
         "service": "JANUS Pro Rule-Based Expert System API",
-        "version": "2.0.0",
+        "version": "2.2.0",
+        "active_ingredients_bridge": True,
+        "strict_pdf_validation": True,
         "pdf_support": True,
         "assumed_build": "PIE.1040.1031.1004"
     }
 
 @app.get("/api/sample-case")
+@app.get("/api/sample-case/")
+@app.get("/sample-case")
 def get_sample_case():
     """Trả về dữ liệu mẫu CASE_DEID_001."""
     sample_path = os.path.join(DATA_DIR, "sample_case_input.json")
@@ -59,6 +65,10 @@ def get_sample_case():
     raise HTTPException(status_code=404, detail="Không tìm thấy tệp sample_case_input.json")
 
 @app.post("/api/analyze")
+@app.post("/api/analyze/")
+@app.post("/analyze")
+@app.post("/analyze/")
+@app.post("/api/api/analyze")
 def analyze_janus_report(payload: JanusCaseRequest):
     """Nhận dữ liệu JSON báo cáo JANUS Pro từ Website và phân tích toàn diện."""
     try:
@@ -70,6 +80,10 @@ def analyze_janus_report(payload: JanusCaseRequest):
 
 @app.post("/api/analyze-pdf")
 @app.post("/api/analyze-pdf/")
+@app.post("/analyze-pdf")
+@app.post("/analyze-pdf/")
+@app.post("/api/api/analyze-pdf")
+@app.post("/api/api/analyze-pdf/")
 async def analyze_janus_pdf_file(
     file: UploadFile = File(...),
     is_pregnant_or_breastfeeding: bool = Form(False),
