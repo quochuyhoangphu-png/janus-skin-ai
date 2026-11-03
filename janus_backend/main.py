@@ -69,6 +69,7 @@ def analyze_janus_report(payload: JanusCaseRequest):
         raise HTTPException(status_code=400, detail=f"Lỗi xử lý dữ liệu: {str(e)}")
 
 @app.post("/api/analyze-pdf")
+@app.post("/api/analyze-pdf/")
 async def analyze_janus_pdf_file(
     file: UploadFile = File(...),
     is_pregnant_or_breastfeeding: bool = Form(False),

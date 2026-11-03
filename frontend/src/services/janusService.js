@@ -2,11 +2,12 @@ import axios from 'axios';
 import sampleCaseInputData from '../data/sample_case_input.json';
 import sampleFullApiResponseData from '../data/sample_full_api_response.json';
 
-const JANUS_API_BASE = import.meta.env.VITE_JANUS_API_URL || 'http://localhost:8000';
+const RAW_BASE = import.meta.env.VITE_JANUS_API_URL || 'http://localhost:8000';
+const JANUS_API_BASE = (RAW_BASE || '').trim().replace(/\/+$/, '');
 
 const janusClient = axios.create({
   baseURL: JANUS_API_BASE,
-  timeout: 30000,
+  timeout: 45000,
 });
 
 /**
