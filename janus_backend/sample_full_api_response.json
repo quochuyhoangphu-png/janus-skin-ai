@@ -1,0 +1,743 @@
+{
+  "metadata_and_version_check": {
+    "case_id": "CASE_DEID_001",
+    "report_date": "2024-03-15",
+    "age_years": 18,
+    "sex_reported": "F",
+    "assumed_software_build": "PIE.1040.1031.1004",
+    "software_build_verified": false,
+    "version_warning": "Dữ liệu giả định máy chạy bản 2023 (PIE.1040.1031.1004). Cần xác minh thực tế trên thiết bị vì bản cập nhật 2024 (PIE.1051.1040.1005) đã thay đổi thuật toán điểm tổng thể và phân loại da."
+  },
+  "stage_2_skin_conditions": [
+    {
+      "condition_id": "SC_PORE_VISIBILITY",
+      "display_name_vi": "Lỗ chân lông rõ / sâu",
+      "type": "Ratio-based",
+      "status_code": 2,
+      "status_label": "2 - Activated (Đã kích hoạt)",
+      "evaluation_basis": "Điểm lỗ chân lông (44.0) vượt mốc tuổi (32.0), tỷ số R=1.38 (high_elevation (>1.30) [Provisional]); nhận định máy: 'Lỗ chân lông to và sâu so với tuổi trung bình'. Điểm theo vùng: A=44.0, B=22.0, C=27.0, D=28.0.",
+      "confidence": "Medium",
+      "not_established": "Pore diameter; Acne diagnosis; Bacterial infection",
+      "recommendation_status": "Active",
+      "metrics_detail": { "ratio": 1.38, "band": "high_elevation (>1.30)", "regions": { "A": 44.0, "B": 22.0, "C": 27.0, "D": 28.0 } }
+    },
+    {
+      "condition_id": "SC_WRINKLE_FEATURES",
+      "display_name_vi": "Đặc điểm nếp nhăn nổi bật",
+      "type": "Ratio-based",
+      "status_code": 2,
+      "status_label": "2 - Activated (Đã kích hoạt)",
+      "evaluation_basis": "Nếp nhăn toàn mặt R=2.1 (high_elevation (>1.30)); Rãnh mũi má R=1.3 (moderate_elevation (>1.15-1.30)). Cả hai vượt mốc tham chiếu tuổi.",
+      "confidence": "Medium",
+      "not_established": "Biological skin age; Collagen concentration; Need for prescription retinoids",
+      "recommendation_status": "Active",
+      "metrics_detail": { "wrinkles_ratio": 2.1, "nasolabial_ratio": 1.3 }
+    },
+    {
+      "condition_id": "SC_LOW_ELASTICITY_REPORTED",
+      "display_name_vi": "Đàn hồi thấp theo nhận định của JANUS",
+      "type": "Vendor-text",
+      "status_code": 2,
+      "status_label": "2 - Activated (Đã kích hoạt)",
+      "evaluation_basis": "Chỉ trích dẫn nguyên văn nhận định của máy: 'Da ít đàn hồi' (Điểm=46.0, Mốc=33.0). Chiều hướng số học (numeric polarity) chưa xác minh độc lập.",
+      "confidence": "Low-Moderate",
+      "not_established": "Measured collagen loss; Clinical laxity; Aging diagnosis",
+      "recommendation_status": "Active",
+      "metrics_detail": {}
+    },
+    {
+      "condition_id": "SC_PIGMENTATION_SIGNAL",
+      "display_name_vi": "Tín hiệu sắc tố nổi bật",
+      "type": "Ratio-based",
+      "status_code": 2,
+      "status_label": "2 - Activated (Đã kích hoạt)",
+      "evaluation_basis": "Sắc tố phân cực (50.0) cao hơn mốc tuổi (32.0), tỷ số R=1.56 (high_elevation (>1.30)). Không suy diễn thành chẩn đoán nám/tàn nhang.",
+      "confidence": "Medium",
+      "not_established": "Melasma; Freckles; Post-inflammatory hyperpigmentation; Exact pigment depth",
+      "recommendation_status": "Active",
+      "metrics_detail": { "ratio": 1.56, "band": "high_elevation (>1.30)" }
+    },
+    {
+      "condition_id": "SC_UV_PIGMENTATION",
+      "display_name_vi": "Tín hiệu sắc tố UV",
+      "type": "Ratio-based",
+      "status_code": 1,
+      "status_label": "1 - Not triggered (Không kích hoạt)",
+      "evaluation_basis": "Điểm sắc tố UV toàn mặt (25.0) bằng mốc tuổi (25.0), R=1.0. Biến thiên vùng chỉ lưu dạng mô tả vì chưa có ngưỡng chuẩn từng vùng.",
+      "confidence": "Medium",
+      "not_established": "UV damage diagnosis; Photoaging diagnosis",
+      "recommendation_status": "Inactive",
+      "metrics_detail": {}
+    },
+    {
+      "condition_id": "SC_SEBUM_DISTRIBUTION",
+      "display_name_vi": "Phân bố bã nhờn không đồng đều / điểm nóng khu trú",
+      "type": "Regional-heuristic",
+      "status_code": 2,
+      "status_label": "2 - Activated (Đã kích hoạt)",
+      "evaluation_basis": "Tách biệt 3 tín hiệu: (1) Mã loại da có chữ O, (2) Bã nhờn toàn mặt=198.0 so với mốc=280.0 (R=0.71), (3) Điểm nóng khu trú tại vùng B=439.0.",
+      "confidence": "Medium",
+      "not_established": "Globally excessive sebum; Seborrheic dermatitis; Acne",
+      "recommendation_status": "Active",
+      "metrics_detail": {}
+    },
+    {
+      "condition_id": "SC_PORPHYRIN_SIGNAL",
+      "display_name_vi": "Tín hiệu porphyrin nổi bật",
+      "type": "Ratio-based",
+      "status_code": 2,
+      "status_label": "2 - Activated (Đã kích hoạt)",
+      "evaluation_basis": "Porphyrin toàn mặt (63.0) vượt mốc tuổi (30.0), R=2.1 (high_elevation (>1.30)). Vùng B có Porphyrin=88.0 và Bã nhờn=439.0. Tuyệt đối không dùng làm chẩn đoán mụn trứng cá.",
+      "confidence": "Medium",
+      "not_established": "Acne vulgaris; Comedones; C. acnes infection; Inflammatory acne severity",
+      "recommendation_status": "Active",
+      "metrics_detail": {}
+    },
+    {
+      "condition_id": "SC_TONE_VARIATION",
+      "display_name_vi": "Chênh lệch tông màu giữa các vùng",
+      "type": "Regional-spread",
+      "status_code": 2,
+      "status_label": "2 - Activated (Đã kích hoạt)",
+      "evaluation_basis": "Độ chênh lệch tông màu giữa các vùng = 12.0 (Trán 62.0 - Má 50.0), vượt mốc thử nghiệm > 7.0.",
+      "confidence": "Experimental",
+      "not_established": "Specific pigment disorder; Cause of dark areas",
+      "recommendation_status": "Active",
+      "metrics_detail": {}
+    },
+    {
+      "condition_id": "SC_REDNESS_LOCAL_REVIEW",
+      "display_name_vi": "Tín hiệu đỏ da khu trú cần kiểm tra",
+      "type": "Swatch-review",
+      "status_code": 2,
+      "status_label": "2 - Activated (Đã kích hoạt)",
+      "evaluation_basis": "Điểm toàn mặt=6.0 (<=6 swatch da tốt), nhưng vùng D=15.0 > 12 swatch minh họa. Kích hoạt yêu cầu kiểm tra ảnh thủ công, không kết luận bệnh lý.",
+      "confidence": "Experimental",
+      "not_established": "Rosacea; Dermatitis; Allergy; Inflammatory disease",
+      "recommendation_status": "Active",
+      "metrics_detail": {}
+    },
+    {
+      "condition_id": "SC_MOISTURE_STATUS",
+      "display_name_vi": "Độ ẩm được JANUS đánh giá là đủ",
+      "type": "Ratio-maintenance",
+      "status_code": 1,
+      "status_label": "1 - Not triggered (Không kích hoạt)",
+      "evaluation_basis": "Độ ẩm (46.0) đạt/vượt mốc thích hợp của báo cáo (25.0), R=1.84. Giữ nguyên nhận định 'Báo cáo ghi da đủ ẩm', duy trì dưỡng ẩm cơ bản.",
+      "confidence": "Medium",
+      "not_established": "TEWL; Corneometer hydration; Skin barrier integrity",
+      "recommendation_status": "Maintenance",
+      "metrics_detail": {}
+    },
+    {
+      "condition_id": "SC_TEXTURE_STATUS",
+      "display_name_vi": "Kết cấu da: báo cáo nhận xét nhìn chung ổn",
+      "type": "Vendor-text",
+      "status_code": 1,
+      "status_label": "1 - Not triggered (Không kích hoạt)",
+      "evaluation_basis": "Nhận định máy: 'Báo cáo nhận xét kết cấu nhìn chung ổn'. Chiều hướng điểm số kết cấu chưa xác minh nên không tự phân loại từ hiệu số số học.",
+      "confidence": "Low",
+      "not_established": "Roughness severity; Barrier damage",
+      "recommendation_status": "Inactive",
+      "metrics_detail": {}
+    },
+    {
+      "condition_id": "SC_UNDER_EYE_DARKNESS",
+      "display_name_vi": "Vùng dưới mắt tối màu theo phân loại JANUS",
+      "type": "Modifier-trait",
+      "status_code": 2,
+      "status_label": "2 - Activated (Đã kích hoạt)",
+      "evaluation_basis": "Ghi nhận chỉ báo +E = 35.0% từ module phân loại loại da. Không tự suy diễn nguyên nhân (mạch máu, sắc tố hay thiếu ngủ).",
+      "confidence": "Medium",
+      "not_established": "Cause of dark circles; Anemia or systemic disease",
+      "recommendation_status": "Active",
+      "metrics_detail": {}
+    }
+  ],
+  "stage_3_skin_type": {
+    "code_as_printed": "ORPW -A +E",
+    "main_code": "ORPW",
+    "additional_code": "-A +E",
+    "vendor_summary": "Da dầu, khỏe, có xu hướng sắc tố và nếp nhăn; quầng mắt tối màu",
+    "important_caveat": "Phần trăm hiển thị là cường độ tín hiệu của thiết bị, KHÔNG phải xác suất thống kê (tổng không bằng 100%).",
+    "profile_16": {
+      "Skin_Type_Code": "ORPW",
+      "Type_Name_VI": "Da Dầu – Ít nhạy cảm/khỏe – Có xu hướng tăng sắc tố – Có xu hướng nếp nhăn",
+      "Main_Care_Focus": "Kiểm soát dầu nhẹ nhàng + Bổ sung hoạt chất từ từ + Chăm sóc/ngừa sắc tố + Chống lão hóa quang hóa",
+      "Suggested_Ingredient_Groups": "Niacinamide; Gel/lotion nhẹ không gây bít tắc; Azelaic acid / Vitamin C (chọn theo dung nạp); Kem chống nắng phổ rộng SPF 30+; Retinoid nồng độ thấp; Dưỡng ẩm duy trì",
+      "Routine_Notes": "Ưu tiên chống nắng hàng ngày; bổ sung từng hoạt chất một cách thận trọng; không lạm dụng acid tẩy tế bào chết",
+      "Cautions_and_Do_Not_Auto_Assume": "Không tự động thêm BHA chỉ vì da dầu; chỉ cân nhắc nếu có bít tắc thực tế. Resistant không đồng nghĩa miễn nhiễm kích ứng. Không tự chẩn đoán nám. Retinoid tránh dùng khi mang thai."
+    },
+    "axes_breakdown": [
+      {
+        "Code": "O",
+        "Axis": "D/O (Dry vs Oily)",
+        "Vietnamese meaning": "Da dầu",
+        "reported_percent": 30.0,
+        "Recommendation direction": "Dạng gel/lotion mỏng nhẹ; dưỡng ẩm không gây bít tắc (non-comedogenic); cân nhắc Niacinamide; BHA chỉ dùng khi có bít tắc/mụn thực tế.",
+        "Important limitation": "Mã O không tự động đồng nghĩa với mụn; không tự động gợi ý acid tẩy tế bào chết cho mọi trường hợp."
+      },
+      {
+        "Code": "R",
+        "Axis": "S/R (Sensitive vs Resistant)",
+        "Vietnamese meaning": "Da khỏe / Ít nhạy cảm",
+        "reported_percent": 30.0,
+        "Recommendation direction": "Có thể cân nhắc dải hoạt chất rộng hơn, bổ sung từng hoạt chất một theo nhu cầu thực tế.",
+        "Important limitation": "Resistant không có nghĩa là không thể bị kích ứng hoặc có thể dùng nhiều hoạt chất mạnh cùng lúc."
+      },
+      {
+        "Code": "P",
+        "Axis": "P/N (Pigmented vs Non-pigmented)",
+        "Vietnamese meaning": "Có xu hướng tăng sắc tố",
+        "reported_percent": 8.0,
+        "Recommendation direction": "Ưu tiên chống nắng hàng đầu; cân nhắc Azelaic Acid, Vitamin C, Retinoid phù hợp dung nạp.",
+        "Important limitation": "P không phải chẩn đoán nám da (melasma); cần đánh giá nguyên nhân trước khi dùng sản phẩm đặc trị."
+      },
+      {
+        "Code": "W",
+        "Axis": "W/T (Wrinkle-prone vs Tight)",
+        "Vietnamese meaning": "Có xu hướng hình thành nếp nhăn",
+        "reported_percent": 70.0,
+        "Recommendation direction": "Chống nắng + dưỡng ẩm phục hồi; có thể làm quen Retinoid nồng độ thấp vào buổi tối.",
+        "Important limitation": "W không tự xác định tuổi sinh học của da; tránh dùng Retinoid khi mang thai hoặc da đang kích ứng."
+      }
+    ],
+    "modifiers_evaluation": [
+      {
+        "code": "-A",
+        "reported_percent": 2.0,
+        "working_interpretation": "Trong báo cáo mẫu, -A đi kèm nhãn 'Có vấn đề nặng', cần theo dõi",
+        "recommendation_use": "Không tự động kích hoạt phác đồ mụn mạnh; cần dựa vào tổn thương/nhân mụn thực tế",
+        "confidence": "Low / sample-only",
+        "caution": "Tuyệt đối không suy diễn mức độ nặng của mụn chỉ từ 2% hoặc mã -A; phân tích hình ảnh JANUS không thay thế chẩn đoán lâm sàng."
+      },
+      {
+        "code": "+E",
+        "reported_percent": 35.0,
+        "working_interpretation": "Mã +E gắn với vùng dưới mắt tối màu trong báo cáo mẫu",
+        "recommendation_use": "Gợi ý dưỡng ẩm và chống nắng chuyên biệt vùng mắt; hoạt chất làm sáng chỉ dùng nếu sản phẩm ghi rõ dùng cho vùng mắt",
+        "confidence": "Medium / sample-supported",
+        "caution": "Không suy ra nguyên nhân quầng thâm; nguyên nhân có thể do cấu trúc, vi mạch máu, sắc tố di truyền hoặc thiếu ngủ."
+      }
+    ]
+  },
+  "stage_4_ingredient_recommendations": {
+    "active_candidates": [
+      {
+        "ingredient": "Niacinamide",
+        "gate_status": "APPROVED",
+        "triggered_by_conditions": [
+          "SC_PORE_VISIBILITY (Lỗ chân lông rõ / sâu)",
+          "SC_PIGMENTATION_SIGNAL (Tín hiệu sắc tố nổi bật)",
+          "SC_SEBUM_DISTRIBUTION (Phân bố bã nhờn không đồng đều)",
+          "SC_TONE_VARIATION (Chênh lệch tông màu)",
+          "SC_UNDER_EYE_DARKNESS (Vùng mắt tối màu)"
+        ],
+        "care_goals": [
+          "Làm sạch dịu nhẹ",
+          "Dưỡng ẩm không bít tắc",
+          "Tránh tẩy da chết quá mức",
+          "Chống nắng phổ rộng hàng ngày",
+          "Làm đều màu da từ từ",
+          "Dưỡng ẩm vùng mắt chuyên biệt"
+        ],
+        "safety_and_use_gates": [
+          "Đối với vùng dưới mắt (+E): Chỉ chọn sản phẩm được bào chế riêng cho vùng mắt.",
+          "Quy tắc gốc: Sử dụng sản phẩm có độ dung nạp kiểm nghiệm cho vùng mắt"
+        ],
+        "published_evidence": [
+          {
+            "source_id": "EV-21",
+            "published_evidence": "Thử nghiệm lâm sàng trên 100 người tham gia trong 4 tuần: Niacinamide giảm tỷ lệ tiết bã nhờn rõ rệt ở tuần thứ 2 và thứ 4.",
+            "limits_and_safety": "Không phải bằng chứng cho thấy mọi điểm số bã nhờn JANUS đều đáp ứng giống nhau; nồng độ cần chọn phù hợp khả năng dung nạp (2-5%)."
+          }
+        ]
+      },
+      {
+        "ingredient": "Salicylic Acid",
+        "gate_status": "CONDITIONAL_COMEDONE_CONFIRMATION",
+        "triggered_by_conditions": [
+          "SC_PORE_VISIBILITY (Lỗ chân lông rõ / sâu)",
+          "SC_PORPHYRIN_SIGNAL (Tín hiệu porphyrin nổi bật)"
+        ],
+        "care_goals": [
+          "Làm sạch sâu bã nhờn lỗ chân lông",
+          "Hỗ trợ giảm bít tắc nhân mụn"
+        ],
+        "safety_and_use_gates": [
+          "Chỉ sử dụng nếu xác nhận độc lập có nhân mụn/bít tắc lỗ chân lông thực tế.",
+          "Không tự động dùng chỉ vì điểm Porphyrin cao hay mã da dầu O.",
+          "Điều kiện an toàn: Bắt đầu ở nồng độ 0.5-2%, giãn cách 2-3 lần/tuần."
+        ],
+        "published_evidence": [
+          {
+            "source_id": "EV-25",
+            "published_evidence": "Hướng dẫn AAD 2024 khuyến cáo có điều kiện Salicylic Acid; RCT nồng độ 0.5% giảm 25% tổn thương viêm và 11% mụn đầu đen sau 12 tuần.",
+            "limits_and_safety": "Khuyến cáo có điều kiện; không kích hoạt phác đồ chỉ từ chỉ số porphyrin đơn lẻ."
+          }
+        ]
+      },
+      {
+        "ingredient": "Glycerin",
+        "gate_status": "APPROVED",
+        "triggered_by_conditions": [
+          "SC_WRINKLE_FEATURES (Nếp nhăn)",
+          "SC_LOW_ELASTICITY_REPORTED (Đàn hồi thấp)",
+          "SC_MOISTURE_STATUS (Duy trì độ ẩm cơ bản)",
+          "SC_UNDER_EYE_DARKNESS (Vùng mắt tối màu)"
+        ],
+        "care_goals": [
+          "Duy trì cấp ẩm sâu cho tế bào sừng",
+          "Bảo vệ hàng rào da",
+          "Ngăn ngừa mất nước xuyên biểu bì"
+        ],
+        "safety_and_use_gates": [
+          "Thành phần nền tảng an toàn cao cho mọi loại da."
+        ],
+        "published_evidence": [
+          {
+            "source_id": "EV-28",
+            "published_evidence": "Nghiên cứu mù đôi ngẫu nhiên 17 tình nguyện viên: Điều trị 10 ngày tăng đáng kể độ ẩm Corneometer.",
+            "limits_and_safety": "Chất giữ ẩm kinh điển, độ dung nạp vượt trội."
+          }
+        ]
+      },
+      {
+        "ingredient": "Ceramides",
+        "gate_status": "APPROVED",
+        "triggered_by_conditions": [
+          "SC_WRINKLE_FEATURES (Nếp nhăn)",
+          "SC_LOW_ELASTICITY_REPORTED (Đàn hồi)",
+          "SC_REDNESS_LOCAL_REVIEW (Đỏ da khu trú)",
+          "SC_MOISTURE_STATUS (Duy trì độ ẩm)"
+        ],
+        "care_goals": [
+          "Tái thiết lập cấu trúc lipid gian bào",
+          "Củng cố hàng rào bảo vệ da",
+          "Làm dịu vùng da đỏ khu trú"
+        ],
+        "safety_and_use_gates": [
+          "Ưu tiên sản phẩm không hương liệu, kết cấu mỏng nhẹ phù hợp da dầu."
+        ],
+        "published_evidence": [
+          {
+            "source_id": "EV-29",
+            "published_evidence": "Tổng quan hệ thống & phân tích gộp 2023 (5 nghiên cứu): Cải thiện rõ rệt chỉ số hàng rào và giảm nhạy cảm so với chất đối chứng.",
+            "limits_and_safety": "Hỗ trợ phục hồi hàng rào sinh lý của da."
+          }
+        ]
+      },
+      {
+        "ingredient": "Panthenol",
+        "gate_status": "APPROVED",
+        "triggered_by_conditions": [
+          "SC_WRINKLE_FEATURES (Nếp nhăn)",
+          "SC_REDNESS_LOCAL_REVIEW (Đỏ da khu trú)"
+        ],
+        "care_goals": [
+          "Làm dịu kích ứng và phục hồi hàng rào da",
+          "Tăng cường khả năng giữ ẩm"
+        ],
+        "safety_and_use_gates": [
+          "An toàn, lành tính, hỗ trợ giảm cảm giác châm chích."
+        ],
+        "published_evidence": [
+          {
+            "source_id": "EV-30",
+            "published_evidence": "Hai nghiên cứu ngẫu nhiên: Panthenol thúc đẩy quá trình hydrat hóa biểu bì và giảm TEWL sau 3 tuần.",
+            "limits_and_safety": "Hoạt chất phục hồi đa năng, dung nạp tốt."
+          }
+        ]
+      },
+      {
+        "ingredient": "Retinoid",
+        "gate_status": "CONDITIONAL_TOLERANCE_CHECK",
+        "triggered_by_conditions": [
+          "SC_WRINKLE_FEATURES (Nếp nhăn)"
+        ],
+        "care_goals": [
+          "Kích thích tăng sinh collagen",
+          "Cải thiện nếp nhăn và kết cấu da"
+        ],
+        "safety_and_use_gates": [
+          "Khách hàng 18 tuổi: Bắt đầu tần suất thấp vào buổi tối (1-2 lần/tuần).",
+          "Bắt buộc chống nắng phổ rộng SPF 30+ vào ban ngày.",
+          "Chống chỉ định tuyệt đối nếu đang mang thai hoặc cho con bú.",
+          "Tạm hoãn nếu da đang có dấu hiệu kích ứng, đỏ rát."
+        ],
+        "published_evidence": [
+          {
+            "source_id": "EV-26",
+            "published_evidence": "Phân tích gộp 8 thử nghiệm lâm sàng trên 1,361 bệnh nhân chứng minh cải thiện nếp nhăn nông và sâu do lão hóa ánh sáng.",
+            "limits_and_safety": "Không tự ý dùng nhóm kê đơn; cần kiểm tra phản ứng kích ứng trước khi dùng."
+          }
+        ]
+      },
+      {
+        "ingredient": "Peptides",
+        "gate_status": "APPROVED",
+        "triggered_by_conditions": [
+          "SC_LOW_ELASTICITY_REPORTED (Đàn hồi thấp)"
+        ],
+        "care_goals": [
+          "Tín hiệu hỗ trợ độ săn chắc và đàn hồi của da",
+          "Hỗ trợ giảm thiểu nếp nhăn biểu cảm"
+        ],
+        "safety_and_use_gates": [
+          "Nhóm hoạt chất an toàn cao, có thể kết hợp cùng Niacinamide hoặc Dưỡng ẩm."
+        ],
+        "published_evidence": [
+          {
+            "source_id": "EV-Pept",
+            "published_evidence": "Nhóm peptide sinh học hỗ trợ tín hiệu phục hồi cấu trúc nền da.",
+            "limits_and_safety": "Tác động hỗ trợ thẩm mỹ bề mặt."
+          }
+        ]
+      },
+      {
+        "ingredient": "Vitamin C",
+        "gate_status": "APPROVED",
+        "triggered_by_conditions": [
+          "SC_PIGMENTATION_SIGNAL (Tín hiệu sắc tố)",
+          "SC_TONE_VARIATION (Chênh lệch tông màu)"
+        ],
+        "care_goals": [
+          "Chống oxy hóa mạnh mẽ",
+          "Hỗ trợ làm sáng và mờ đốm sắc tố",
+          "Bảo vệ da trước tác hại môi trường"
+        ],
+        "safety_and_use_gates": [
+          "Bắt buộc kết hợp kem chống nắng vào ban ngày.",
+          "Với da mới làm quen, chọn dẫn xuất êm dịu (SAP, E-AA) trước khi dùng L-AA nồng độ cao."
+        ],
+        "published_evidence": [
+          {
+            "source_id": "EV-23",
+            "published_evidence": "Tổng quan hệ thống ghi nhận cải thiện sắc tố biểu bì và bề mặt da sáng đều màu hơn.",
+            "limits_and_safety": "Hiệu quả cần thời gian từ 8-12 tuần; cần bảo quản tránh oxy hóa."
+          }
+        ]
+      },
+      {
+        "ingredient": "Azelaic Acid",
+        "gate_status": "APPROVED",
+        "triggered_by_conditions": [
+          "SC_PIGMENTATION_SIGNAL (Tín hiệu sắc tố)",
+          "SC_TONE_VARIATION (Chênh lệch tông màu)"
+        ],
+        "care_goals": [
+          "Ức chế men tyrosinase giúp làm mờ thâm nám",
+          "Hỗ trợ làm dịu và kháng khuẩn nhẹ"
+        ],
+        "safety_and_use_gates": [
+          "Có thể gây châm chích nhẹ trong vài lần đầu sử dụng.",
+          "An toàn dùng được cho nhiều loại da khác nhau."
+        ],
+        "published_evidence": [
+          {
+            "source_id": "EV-24",
+            "published_evidence": "Tổng quan 2023 trên 43 RCT: Azelaic acid cải thiện mức độ sắc tố rõ rệt so với nhóm chứng.",
+            "limits_and_safety": "Không tự suy diễn thành chẩn đoán bệnh lý melasma từ hình ảnh đơn thuần."
+          }
+        ]
+      }
+    ]
+  },
+  "stage_5_product_matches": {
+    "important_notice": "Danh sách truy xuất dựa trên sự xuất hiện của tên INCI trong bảng thành phần; KHÔNG đồng nghĩa với việc sản phẩm đã được kiểm chứng lâm sàng về nồng độ hoặc hiệu quả điều trị.",
+    "top_multi_active_products": [
+      {
+        "product_id": "COS_00360",
+        "product_name": "Bye Bye Makeup™ 3-in-1 Makeup Melting Cleansing Balm",
+        "matched_active_count": 7,
+        "matched_active_groups": ["Niacinamide", "Glycerin", "Ceramides", "Panthenol", "Retinoid", "Peptides", "Vitamin C"],
+        "matched_inci_summary": [
+          "Niacinamide: Niacinamide (Vị trí #21/74)",
+          "Glycerin: Glycerin (Vị trí #13/74)",
+          "Ceramides: Ceramide Np (Vị trí #29/74)",
+          "Panthenol: Panthenol (Vị trí #26/74)",
+          "Retinoid: Retinyl Palmitate (Vị trí #45/74)",
+          "Peptides: Palmitoyl Tripeptide-1 (Vị trí #33/74)",
+          "Vitamin C: Sodium Ascorbyl Phosphate (Vị trí #44/74)"
+        ]
+      },
+      {
+        "product_id": "COS_00728",
+        "product_name": "Bye Bye Pores Primer™ Oil-Free Poreless Skin-Perfecting Serum Primer",
+        "matched_active_count": 7,
+        "matched_active_groups": ["Niacinamide", "Glycerin", "Ceramides", "Panthenol", "Retinoid", "Peptides", "Vitamin C"],
+        "matched_inci_summary": [
+          "Niacinamide: Niacinamide (Vị trí #30/85)",
+          "Glycerin: Glycerin (Vị trí #19/85)",
+          "Ceramides: Ceramide Np (Vị trí #57/85)",
+          "Panthenol: Panthenol (Vị trí #64/85)",
+          "Retinoid: Retinol (Vị trí #31/85)",
+          "Peptides: Acetyl Hexapeptide-8 (Vị trí #32/85)",
+          "Vitamin C: Sodium Ascorbyl Phosphate (Vị trí #41/85)"
+        ]
+      },
+      {
+        "product_id": "COS_01109",
+        "product_name": "Bye Bye Under Eye Eye Cream™ Smooths, Brightens, Depuffs",
+        "matched_active_count": 7,
+        "matched_active_groups": ["Niacinamide", "Glycerin", "Ceramides", "Panthenol", "Retinoid", "Peptides", "Vitamin C"],
+        "matched_inci_summary": [
+          "Niacinamide: Niacinamide (Vị trí #6/93)",
+          "Glycerin: Glycerin (Vị trí #15/93)",
+          "Ceramides: Ceramide Np (Vị trí #31/93)",
+          "Panthenol: Panthenol (Vị trí #57/93)",
+          "Retinoid: Retinol (Vị trí #37/93)",
+          "Peptides: Acetyl Hexapeptide-8 (Vị trí #19/93)",
+          "Vitamin C: Sodium Ascorbyl Phosphate (Vị trí #29/93)"
+        ]
+      },
+      {
+        "product_id": "COS_00016",
+        "product_name": "The Littles™",
+        "matched_active_count": 6,
+        "matched_active_groups": ["Niacinamide", "Salicylic Acid", "Glycerin", "Panthenol", "Peptides", "Vitamin C"],
+        "matched_inci_summary": [
+          "Niacinamide: Niacinamide (Vị trí #61/147)",
+          "Salicylic Acid: Salicylic Acid (Vị trí #70/147)",
+          "Glycerin: Glycerin (Vị trí #3/147)",
+          "Panthenol: Panthenol (Vị trí #59/147)",
+          "Peptides: Copper Tripeptide-1 (Vị trí #129/147)",
+          "Vitamin C: Ascorbic Acid (Vị trí #19/147)"
+        ]
+      },
+      {
+        "product_id": "COS_00134",
+        "product_name": "Miracle Water 3-in-1 Micellar Cleanser",
+        "matched_active_count": 6,
+        "matched_active_groups": ["Niacinamide", "Glycerin", "Ceramides", "Retinoid", "Peptides", "Vitamin C"],
+        "matched_inci_summary": [
+          "Niacinamide: Niacinamide (Vị trí #61/66)",
+          "Glycerin: Glycerin (Vị trí #5/66)",
+          "Ceramides: Ceramide Np (Vị trí #27/66)",
+          "Retinoid: Retinol (Vị trí #64/66)",
+          "Peptides: Palmitoyl Tetrapeptide-7 (Vị trí #52/66)",
+          "Vitamin C: 3-O-Ethyl Ascorbic Acid (Vị trí #51/66)"
+        ]
+      }
+    ],
+    "by_active_ingredient": {
+      "Niacinamide": {
+        "total_matched_products": 182,
+        "sample_products": [
+          {
+            "product_id": "SPC_00175",
+            "product_name": "Dermalogica AGE Bright Clearing Serum 30ml",
+            "best_ingredient_order": 1,
+            "matched_inci_details": ["Niacinamide (Vị trí INCI #1/31)"]
+          },
+          {
+            "product_id": "SPC_00602",
+            "product_name": "CeraVe Eye Repair Cream 14ml",
+            "best_ingredient_order": 1,
+            "matched_inci_details": ["Niacinamide (Vị trí INCI #1/38)"]
+          },
+          {
+            "product_id": "SPC_00179",
+            "product_name": "SkinCeuticals Discoloration Defense Corrective Serum 30ml",
+            "best_ingredient_order": 2,
+            "matched_inci_details": ["Niacinamide (Vị trí INCI #2/13)"]
+          }
+        ]
+      },
+      "Salicylic Acid": {
+        "total_matched_products": 179,
+        "sample_products": [
+          {
+            "product_id": "SPC_00834",
+            "product_name": "NIP+FAB Salicylic Fix Tonic XXL Extreme 2% 190ml",
+            "best_ingredient_order": 2,
+            "matched_inci_details": ["Salicylic Acid (Vị trí INCI #2/17)"]
+          },
+          {
+            "product_id": "SPC_00838",
+            "product_name": "Clinique Clarifying Lotion 3 200ml",
+            "best_ingredient_order": 2,
+            "matched_inci_details": ["Salicylic Acid (Vị trí INCI #2/16)"]
+          },
+          {
+            "product_id": "SPC_00839",
+            "product_name": "Clinique Clarifying Lotion 3 400ml",
+            "best_ingredient_order": 2,
+            "matched_inci_details": ["Salicylic Acid (Vị trí INCI #2/16)"]
+          }
+        ]
+      },
+      "Glycerin": {
+        "total_matched_products": 1735,
+        "sample_products": [
+          {
+            "product_id": "SPC_00005",
+            "product_name": "CeraVe Moisturising Cream 454g",
+            "best_ingredient_order": 1,
+            "matched_inci_details": ["Glycerin (Vị trí INCI #1/22)"]
+          },
+          {
+            "product_id": "SPC_00006",
+            "product_name": "CeraVe Moisturising Lotion 473ml",
+            "best_ingredient_order": 1,
+            "matched_inci_details": ["Glycerin (Vị trí INCI #1/24)"]
+          },
+          {
+            "product_id": "SPC_00007",
+            "product_name": "CeraVe Facial Moisturising Lotion No SPF 52ml",
+            "best_ingredient_order": 1,
+            "matched_inci_details": ["Glycerin (Vị trí INCI #1/21)"]
+          }
+        ]
+      },
+      "Ceramides": {
+        "total_matched_products": 102,
+        "sample_products": [
+          {
+            "product_id": "SPC_00858",
+            "product_name": "Elizabeth Arden Ceramide Purifying Toner (200ml)",
+            "best_ingredient_order": 4,
+            "matched_inci_details": ["Ceramide 3 (Vị trí INCI #4/23)"]
+          },
+          {
+            "product_id": "SPC_00007",
+            "product_name": "CeraVe Facial Moisturising Lotion No SPF 52ml",
+            "best_ingredient_order": 5,
+            "matched_inci_details": [
+              "Ceramide 3 (Vị trí INCI #5/21)",
+              "Ceramide 6 Ii (Vị trí INCI #6/21)",
+              "Ceramide 1 (Vị trí INCI #7/21)"
+            ]
+          },
+          {
+            "product_id": "COS_00793",
+            "product_name": "Advanced Anti-Aging Repairing Oil",
+            "best_ingredient_order": 5,
+            "matched_inci_details": ["Ceramide 3 (Vị trí INCI #5/12)"]
+          }
+        ]
+      },
+      "Panthenol": {
+        "total_matched_products": 307,
+        "sample_products": [
+          {
+            "product_id": "SPC_00129",
+            "product_name": "Medik8 Hydr8 B5 Serum 30ml",
+            "best_ingredient_order": 1,
+            "matched_inci_details": ["Panthenol (Vị trí INCI #1/6)"]
+          },
+          {
+            "product_id": "SPC_00003",
+            "product_name": "The Ordinary Hyaluronic Acid 2% + B5 Hydration Support Formula 30ml",
+            "best_ingredient_order": 2,
+            "matched_inci_details": ["Panthenol (Vị trí INCI #2/17)"]
+          },
+          {
+            "product_id": "SPC_00122",
+            "product_name": "The Ordinary Hyaluronic Acid 2% + B5 Supersize Serum 60ml",
+            "best_ingredient_order": 2,
+            "matched_inci_details": ["Panthenol (Vị trí INCI #2/17)"]
+          }
+        ]
+      },
+      "Retinoid": {
+        "total_matched_products": 170,
+        "sample_products": [
+          {
+            "product_id": "SPC_00135",
+            "product_name": "PIXI Collagen and Retinol Serum 30ml",
+            "best_ingredient_order": 3,
+            "matched_inci_details": ["Retinol (Vị trí INCI #3/18)"]
+          },
+          {
+            "product_id": "SPC_00159",
+            "product_name": "Peter Thomas Roth Retinol Fusion PM 30ml",
+            "best_ingredient_order": 3,
+            "matched_inci_details": ["Retinol (Vị trí INCI #3/11)"]
+          },
+          {
+            "product_id": "COS_00627",
+            "product_name": "Retinol Fusion PM",
+            "best_ingredient_order": 4,
+            "matched_inci_details": ["Retinol (Vị trí INCI #4/12)"]
+          }
+        ]
+      },
+      "Peptides": {
+        "total_matched_products": 243,
+        "sample_products": [
+          {
+            "product_id": "SPC_00116",
+            "product_name": "The Ordinary 10% Agireline Solution 30ml",
+            "best_ingredient_order": 2,
+            "matched_inci_details": ["Acetyl Hexapeptide-8 (Vị trí INCI #2/10)"]
+          },
+          {
+            "product_id": "SPC_00117",
+            "product_name": "The Ordinary Buffet Supersize Serum 60ml",
+            "best_ingredient_order": 3,
+            "matched_inci_details": [
+              "Acetyl Hexapeptide-8 (Vị trí INCI #3/49)",
+              "Palmitoyl Tripeptide-1 (Vị trí INCI #5/49)",
+              "Palmitoyl Tetrapeptide-7 (Vị trí INCI #6/49)",
+              "Palmitoyl Tripeptide-38 (Vị trí INCI #7/49)"
+            ]
+          },
+          {
+            "product_id": "SPC_00327",
+            "product_name": "Dermalogica Age Smart Antioxidant Hydramist 150ml",
+            "best_ingredient_order": 3,
+            "matched_inci_details": ["Palmitoyl Tripeptide-5 (Vị trí INCI #3/35)"]
+          }
+        ]
+      },
+      "Vitamin C": {
+        "total_matched_products": 481,
+        "sample_products": [
+          {
+            "product_id": "SPC_00126",
+            "product_name": "La Roche-Posay Pure Vitamin C10 Serum 30ml",
+            "best_ingredient_order": 1,
+            "matched_inci_details": ["Ascorbic Acid (Vị trí INCI #1/27)"]
+          },
+          {
+            "product_id": "COS_00698",
+            "product_name": "Turbo Booster C Powder",
+            "best_ingredient_order": 1,
+            "matched_inci_details": ["Ascorbic Acid (Vị trí INCI #1/9)"]
+          },
+          {
+            "product_id": "COS_01457",
+            "product_name": "Prime & Protect Mattifying Primer with Broad Spectrum SPF 50",
+            "best_ingredient_order": 1,
+            "matched_inci_details": ["Ascorbic Acid (Vị trí INCI #1/25)"]
+          }
+        ]
+      },
+      "Azelaic Acid": {
+        "total_matched_products": 6,
+        "sample_products": [
+          {
+            "product_id": "COS_00608",
+            "product_name": "Ferulic Acid + Retinol Brightening Solution",
+            "best_ingredient_order": 5,
+            "matched_inci_details": ["Potassium Azeloyl Diglycinate (Vị trí INCI #5/30)"]
+          },
+          {
+            "product_id": "COS_01111",
+            "product_name": "Ferulic + Retinol Triple Correction Eye Serum",
+            "best_ingredient_order": 8,
+            "matched_inci_details": ["Potassium Azeloyl Diglycinate (Vị trí INCI #8/36)"]
+          },
+          {
+            "product_id": "SPC_00739",
+            "product_name": "Dr Dennis Gross Alpha Beta Pore Perfecting Cleansing Gel 60ml",
+            "best_ingredient_order": 15,
+            "matched_inci_details": ["Potassium Azeloyl Diglycinate (Vị trí INCI #15/41)"]
+          }
+        ]
+      }
+    }
+  },
+  "medical_disclaimer": "CẢNH BÁO Y KHOA: Hệ thống hoạt động dựa trên bộ luật thử nghiệm (Rule-based Prototype). Kết quả chỉ phục vụ mục đích tham khảo chăm sóc da thẩm mỹ, tuyệt đối KHÔNG thay thế chẩn đoán y khoa hoặc phác đồ điều trị của bác sĩ da liễu."
+}

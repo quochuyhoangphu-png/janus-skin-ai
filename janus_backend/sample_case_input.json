@@ -1,0 +1,131 @@
+{
+  "metadata": {
+    "case_id": "CASE_DEID_001",
+    "report_date": "2024-03-15",
+    "age_years": 18,
+    "sex_reported": "F",
+    "assumed_software_build": "PIE.1040.1031.1004",
+    "software_build_verified": false,
+    "version_warning": "Dữ liệu giả định máy chạy bản 2023 (PIE.1040.1031.1004). Cần xác minh thực tế trên thiết bị vì bản cập nhật 2024 (PIE.1051.1040.1005) đã thay đổi thuật toán điểm tổng thể và phân loại da."
+  },
+  "user_safety_context": {
+    "is_pregnant_or_breastfeeding": false,
+    "has_visible_comedones_confirmed": false,
+    "known_allergies": [],
+    "skin_currently_irritated": false
+  },
+  "whole_face_features": {
+    "JANUS_PORES": {
+      "feature_name_vi": "Lỗ chân lông",
+      "report_value": 44.0,
+      "comparison_value": 32.0,
+      "comparison_basis": "Mốc tuổi trung bình",
+      "vendor_text_interpretation": "Lỗ chân lông to và sâu so với tuổi trung bình"
+    },
+    "JANUS_WRINKLES": {
+      "feature_name_vi": "Nếp nhăn",
+      "report_value": 42.0,
+      "comparison_value": 20.0,
+      "comparison_basis": "Mốc tuổi trung bình",
+      "vendor_text_interpretation": "Nếp nhăn nhiều hơn so với tuổi trung bình"
+    },
+    "JANUS_NASOLABIAL_WRINKLES": {
+      "feature_name_vi": "Rãnh mũi má",
+      "report_value": 26.0,
+      "comparison_value": 20.0,
+      "comparison_basis": "Mốc tuổi trung bình",
+      "vendor_text_interpretation": "Rãnh cười hơi sâu"
+    },
+    "JANUS_ELASTICITY": {
+      "feature_name_vi": "Độ đàn hồi",
+      "report_value": 46.0,
+      "comparison_value": 33.0,
+      "comparison_basis": "Mốc tuổi trung bình",
+      "vendor_text_interpretation": "Da ít đàn hồi"
+    },
+    "JANUS_PIGMENTATION": {
+      "feature_name_vi": "Sắc tố phân cực",
+      "report_value": 50.0,
+      "comparison_value": 32.0,
+      "comparison_basis": "Mốc tuổi trung bình",
+      "vendor_text_interpretation": "Có đốm sắc tố đậm màu"
+    },
+    "JANUS_UV_PIGMENTATION": {
+      "feature_name_vi": "Sắc tố UV",
+      "report_value": 25.0,
+      "comparison_value": 25.0,
+      "comparison_basis": "Mốc tuổi trung bình",
+      "vendor_text_interpretation": "Mức độ sắc tố UV bình thường"
+    },
+    "JANUS_SEBUM": {
+      "feature_name_vi": "Bã nhờn toàn mặt",
+      "report_value": 198.0,
+      "comparison_value": 280.0,
+      "comparison_basis": "Mốc tuổi trung bình",
+      "vendor_text_interpretation": "Bã nhờn toàn mặt thấp hơn mốc tuổi"
+    },
+    "JANUS_PORPHYRIN": {
+      "feature_name_vi": "Porphyrin (Vi khuẩn)",
+      "report_value": 63.0,
+      "comparison_value": 30.0,
+      "comparison_basis": "Mốc tuổi trung bình",
+      "vendor_text_interpretation": "Porphyrin cao vượt mốc tuổi"
+    },
+    "JANUS_SKIN_TONE": {
+      "feature_name_vi": "Tông màu da",
+      "report_value": 58.0,
+      "comparison_value": 55.0,
+      "comparison_basis": "Mốc tuổi trung bình",
+      "vendor_text_interpretation": "Tông da trung bình sáng"
+    },
+    "JANUS_REDNESS": {
+      "feature_name_vi": "Độ đỏ da",
+      "report_value": 6.0,
+      "comparison_value": 6.0,
+      "comparison_basis": "Mốc swatch tốt",
+      "vendor_text_interpretation": "Độ đỏ toàn mặt ở mức tốt"
+    },
+    "JANUS_MOISTURE": {
+      "feature_name_vi": "Độ ẩm",
+      "report_value": 46.0,
+      "comparison_value": 25.0,
+      "comparison_basis": "Mốc thích hợp",
+      "vendor_text_interpretation": "Báo cáo ghi da đủ ẩm; 25 chỉ là comparator của report này"
+    },
+    "JANUS_TEXTURE": {
+      "feature_name_vi": "Kết cấu da",
+      "report_value": 40.0,
+      "comparison_value": 40.0,
+      "comparison_basis": "Mốc tuổi trung bình",
+      "vendor_text_interpretation": "Báo cáo nhận xét kết cấu nhìn chung ổn"
+    }
+  },
+  "regional_features": {
+    "JANUS_PORES": { "A": 44.0, "B": 22.0, "C": 27.0, "D": 28.0 },
+    "JANUS_SEBUM": { "A": 120.0, "B": 439.0, "C": 180.0, "D": 150.0 },
+    "JANUS_PORPHYRIN": { "A": 25.0, "B": 88.0, "C": 30.0, "D": 40.0 },
+    "JANUS_UV_PIGMENTATION": { "A": 4.0, "B": 15.0, "C": 22.0, "D": 25.0, "E": 0.0, "F": 1.0, "G": 0.0, "H": 0.0 },
+    "JANUS_REDNESS": { "A": 5.0, "B": 6.0, "C": 5.0, "D": 15.0 },
+    "JANUS_SKIN_TONE": { "Trán": 62.0, "Má trái": 50.0, "Má phải": 52.0, "Cằm": 58.0 }
+  },
+  "skin_type_report": {
+    "code_as_printed": "ORPW -A +E",
+    "main_code": "ORPW",
+    "additional_code": "-A +E",
+    "vendor_summary": "Da dầu, khỏe, có xu hướng sắc tố và nếp nhăn; quầng mắt tối màu",
+    "traits": {
+      "O": { "panel": "Dầu/Khô", "vendor_label_en": "Oily", "vendor_label_vi": "Da dầu", "sample_percent": 30.0, "validation_status": "Verified" },
+      "D": { "panel": "Dầu/Khô", "vendor_label_en": "Dry", "vendor_label_vi": "Da khô", "sample_percent": 0.0, "validation_status": "Verified" },
+      "R": { "panel": "Nhạy cảm/Khỏe", "vendor_label_en": "Resistant", "vendor_label_vi": "Da khỏe / Ít nhạy cảm", "sample_percent": 30.0, "validation_status": "Verified" },
+      "S": { "panel": "Nhạy cảm/Khỏe", "vendor_label_en": "Sensitive", "vendor_label_vi": "Da nhạy cảm", "sample_percent": 0.0, "validation_status": "Verified" },
+      "P": { "panel": "Sắc tố/Không sắc tố", "vendor_label_en": "Pigmented", "vendor_label_vi": "Có xu hướng tăng sắc tố", "sample_percent": 8.0, "validation_status": "Verified" },
+      "N": { "panel": "Sắc tố/Không sắc tố", "vendor_label_en": "Non-pigmented", "vendor_label_vi": "Không có xu hướng sắc tố", "sample_percent": 0.0, "validation_status": "Verified" },
+      "W": { "panel": "Nếp nhăn/Căng mịn", "vendor_label_en": "Wrinkle-prone", "vendor_label_vi": "Có xu hướng hình thành nếp nhăn", "sample_percent": 70.0, "validation_status": "Verified" },
+      "T": { "panel": "Nếp nhăn/Căng mịn", "vendor_label_en": "Tight", "vendor_label_vi": "Da căng mịn", "sample_percent": 0.0, "validation_status": "Verified" },
+      "+A": { "panel": "Mã phụ Mụn", "vendor_label_en": "Acne positive", "vendor_label_vi": "Xu hướng mụn tích cực", "sample_percent": 0.0, "validation_status": "Sample-supported" },
+      "-A": { "panel": "Mã phụ Mụn", "vendor_label_en": "Acne severe note", "vendor_label_vi": "Có vấn đề mụn/bít tắc cần theo dõi", "sample_percent": 2.0, "validation_status": "Sample-supported" },
+      "+E": { "panel": "Mã phụ Mắt", "vendor_label_en": "Under-eye dark circles", "vendor_label_vi": "Vùng dưới mắt tối màu", "sample_percent": 35.0, "validation_status": "Sample-supported" },
+      "-E": { "panel": "Mã phụ Mắt", "vendor_label_en": "Eye area clear", "vendor_label_vi": "Vùng mắt bình thường", "sample_percent": 0.0, "validation_status": "Sample-supported" }
+    }
+  }
+}
