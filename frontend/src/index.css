@@ -1,66 +1,136 @@
 :root {
-  --bg-primary: #0b132b;
-  --bg-secondary: #1c2541;
-  --bg-tertiary: #3a506b;
-  --card-bg: rgba(28, 37, 65, 0.7);
-  --accent: #ffd166;
-  --accent-gold: #e2b049;
-  --accent-hover: #e0b445;
-  --text-primary: #f0f4f8;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --border-color: rgba(255, 255, 255, 0.08);
-  --success: #10b981;
-  --warning: #f59e0b;
-  --danger: #ef4444;
-  --info: #06b6d4;
-  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* DermAI Cosmetic Technology Palette (https://cosmetics-ai-roan.vercel.app/) */
+  --color-primary: hsl(348, 83%, 47%);
+  --color-primary-light: hsl(348, 70%, 65%);
+  --color-primary-dark: hsl(348, 83%, 32%);
+  --color-primary-rgb: 200, 39, 78;
+
+  --color-accent: hsl(270, 50%, 60%);
+  --color-accent-light: hsl(270, 50%, 75%);
+  --color-accent-dark: hsl(270, 50%, 45%);
+  --color-accent-rgb: 153, 102, 204;
+
+  --color-secondary: hsl(170, 60%, 45%);
+  --color-secondary-light: hsl(170, 50%, 65%);
+  --color-secondary-dark: hsl(170, 60%, 35%);
+  --color-secondary-rgb: 46, 184, 161;
+
+  --color-bg: #faf6fa;
+  --color-surface: #ffffff;
+  --color-surface-elevated: #fdfafc;
+  --color-surface-hover: #f7eff7;
+
+  --color-text: #241e2b;
+  --color-text-secondary: #6e6777;
+  --color-text-muted: #958e9e;
+  --color-border: #ede4ee;
+  --color-border-light: #f5edf5;
+
+  --gradient-primary: linear-gradient(135deg, hsl(348, 83%, 47%), hsl(270, 50%, 60%));
+  --gradient-hero: linear-gradient(135deg, hsl(348, 83%, 47%), hsl(270, 50%, 55%), hsl(200, 70%, 50%));
+  --gradient-surface: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.75));
+  --gradient-soft-rose: linear-gradient(135deg, rgba(200, 39, 78, 0.08), rgba(153, 102, 204, 0.05));
+
+  --font-heading: 'Playfair Display', Georgia, serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Legacy & compatibility mapping */
+  --bg-primary: var(--color-bg);
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f3eaf3;
+  --card-bg: rgba(255, 255, 255, 0.92);
+  --accent: var(--color-primary);
+  --accent-gold: var(--color-accent);
+  --accent-hover: var(--color-primary-dark);
+  --text-primary: var(--color-text);
+  --text-secondary: var(--color-text-secondary);
+  --text-muted: var(--color-text-muted);
+  --border-color: rgba(200, 39, 78, 0.14);
+  --success: #198754;
+  --warning: #d97706;
+  --danger: #dc2626;
+  --info: #0284c7;
+  --font-family: var(--font-body);
 }
 
 body {
   margin: 0;
   padding: 0;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: var(--font-family);
+  background-color: var(--color-bg);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(200, 39, 78, 0.04) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(153, 102, 204, 0.05) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(46, 184, 161, 0.03) 0px, transparent 50%);
+  color: var(--color-text);
+  font-family: var(--font-body);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Glassmorphism Card */
-.glass-card {
-  background: var(--card-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+h1, h2, h3, h4, h5, h6, .hero-title, .section-title, .brand-logo {
+  font-family: var(--font-heading);
+  color: var(--color-text);
+  letter-spacing: -0.02em;
 }
 
-/* Custom Navbar */
-.navbar-custom {
-  background: rgba(11, 19, 43, 0.85);
+/* Glassmorphism Card (DermAI Light Aesthetic) */
+.glass-card {
+  background: var(--card-bg);
   backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border-color);
-  padding: 0.8rem 0;
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(74, 21, 63, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.glass-card:hover {
+  box-shadow: 0 14px 40px rgba(74, 21, 63, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+/* Custom Navbar (DermAI Aesthetic) */
+.navbar-custom {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(200, 39, 78, 0.12);
+  padding: 0.85rem 0;
+  box-shadow: 0 4px 20px rgba(74, 21, 63, 0.03);
 }
 
 .brand-logo {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: var(--accent);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   letter-spacing: -0.5px;
 }
 
-.nav-highlight-link {
-  color: var(--accent) !important;
-  font-weight: 600;
+.navbar-custom .nav-link {
+  color: var(--color-text-secondary) !important;
+  font-weight: 500;
   transition: all 0.2s ease;
+  padding: 0.5rem 0.9rem !important;
+  border-radius: 8px;
+}
+
+.navbar-custom .nav-link:hover {
+  color: var(--color-primary) !important;
+  background: rgba(200, 39, 78, 0.05);
+}
+
+.nav-highlight-link {
+  color: var(--color-primary) !important;
+  font-weight: 600 !important;
+  background: rgba(200, 39, 78, 0.08) !important;
+  border-radius: 20px !important;
+  padding: 0.45rem 1rem !important;
 }
 
 .nav-highlight-link:hover {
-  text-shadow: 0 0 10px rgba(255, 209, 102, 0.5);
+  background: rgba(200, 39, 78, 0.14) !important;
+  color: var(--color-primary-dark) !important;
 }
 
 .cart-badge {
@@ -68,116 +138,126 @@ body {
   top: 0;
   right: -8px;
   font-size: 0.7rem;
+  background: var(--color-primary) !important;
+  color: #fff !important;
 }
 
 /* Hero Section */
 .hero-section {
-  padding: 5rem 0 3rem;
-  background: radial-gradient(circle at 50% 20%, rgba(58, 80, 107, 0.3) 0%, transparent 70%);
+  padding: 4.5rem 0 3rem;
+  background: radial-gradient(circle at 50% 20%, rgba(200, 39, 78, 0.06) 0%, transparent 70%);
 }
 
 .hero-title {
   font-size: 2.8rem;
   font-weight: 800;
-  color: #fff;
-  letter-spacing: -1px;
+  color: var(--color-text);
+  line-height: 1.25;
 }
 
 .hero-subtitle {
   font-size: 1.15rem;
-  color: var(--text-secondary);
-  line-height: 1.6;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
 }
 
 .section-title {
-  font-size: 1.8rem;
+  font-size: 1.85rem;
   font-weight: 700;
-  color: #fff;
-  letter-spacing: -0.5px;
+  color: var(--color-text);
 }
 
 /* Form inputs */
 .form-control-dark {
-  background-color: rgba(11, 19, 43, 0.6) !important;
+  background-color: #ffffff !important;
   border: 1px solid var(--border-color) !important;
-  color: #fff !important;
-  border-radius: 8px !important;
+  color: var(--color-text) !important;
+  border-radius: 10px !important;
 }
 
 .form-control-dark:focus {
-  border-color: var(--accent) !important;
-  box-shadow: 0 0 0 0.2rem rgba(255, 209, 102, 0.25) !important;
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 0.2rem rgba(200, 39, 78, 0.15) !important;
 }
 
-/* Custom Table */
+/* Custom Table (DermAI Clinic Luxury Table) */
 .table-dark-custom {
   --bs-table-bg: transparent;
-  --bs-table-color: var(--text-primary);
-  --bs-table-hover-bg: rgba(255, 255, 255, 0.03);
-  border-color: var(--border-color);
+  --bs-table-color: var(--color-text);
+  --bs-table-hover-bg: rgba(200, 39, 78, 0.03);
+  border-color: rgba(200, 39, 78, 0.1);
 }
 
 .table-dark-custom th {
-  background: rgba(28, 37, 65, 0.9);
-  color: var(--accent);
-  font-weight: 600;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border-bottom: 2px solid var(--border-color);
-  padding: 12px 16px;
+  background: #fdf5f8 !important;
+  color: var(--color-primary) !important;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.92rem;
+  letter-spacing: 0.3px;
+  border-bottom: 2px solid rgba(200, 39, 78, 0.2) !important;
+  padding: 14px 18px;
 }
 
 .table-dark-custom td {
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--border-color);
+  padding: 14px 18px;
+  color: var(--color-text) !important;
+  border-bottom: 1px solid rgba(200, 39, 78, 0.08) !important;
 }
 
 /* Buttons */
 .btn-accent {
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-gold) 100%);
-  color: #0b132b;
+  background: var(--gradient-primary);
+  color: #ffffff !important;
   font-weight: 600;
   border: none;
-  border-radius: 8px;
-  padding: 0.5rem 1.2rem;
-  transition: all 0.2s ease;
+  border-radius: 10px;
+  padding: 0.55rem 1.4rem;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 15px rgba(200, 39, 78, 0.25);
 }
 
 .btn-accent:hover {
-  background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
-  color: #0b132b;
+  background: linear-gradient(135deg, hsl(348, 83%, 42%), hsl(270, 50%, 55%));
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(255, 209, 102, 0.3);
+  box-shadow: 0 6px 22px rgba(200, 39, 78, 0.35);
+  color: #ffffff !important;
 }
 
 .btn-accent:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
 }
 
 /* Tabs */
+.custom-nav-tabs {
+  border-bottom: 2px solid rgba(200, 39, 78, 0.15);
+}
+
 .custom-nav-tabs .nav-link {
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
   border: 1px solid transparent;
   border-bottom: none;
-  font-weight: 500;
-  border-radius: 8px 8px 0 0;
-  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+  border-radius: 10px 10px 0 0;
+  padding: 0.85rem 1.4rem;
   transition: all 0.2s ease;
 }
 
 .custom-nav-tabs .nav-link:hover {
-  color: var(--text-primary);
-  border-color: var(--border-color);
+  color: var(--color-primary);
+  background: rgba(200, 39, 78, 0.04);
 }
 
 .custom-nav-tabs .nav-link.active {
-  color: var(--accent) !important;
-  background-color: var(--bg-secondary) !important;
-  border-color: var(--border-color) !important;
-  border-bottom-color: var(--bg-secondary) !important;
-  font-weight: 600;
+  color: var(--color-primary) !important;
+  background-color: #ffffff !important;
+  border-color: rgba(200, 39, 78, 0.2) !important;
+  border-bottom-color: #ffffff !important;
+  border-top: 3px solid var(--color-primary) !important;
+  font-weight: 700;
+  box-shadow: 0 -4px 12px rgba(74, 21, 63, 0.04);
 }
 
 /* Animation */
@@ -192,10 +272,10 @@ body {
 
 /* Skeleton Loading */
 .skeleton {
-  background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%);
+  background: linear-gradient(90deg, rgba(200,39,78,0.04) 25%, rgba(200,39,78,0.09) 50%, rgba(200,39,78,0.04) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
-  border-radius: 8px;
+  border-radius: 10px;
 }
 
 @keyframes shimmer {
@@ -205,31 +285,65 @@ body {
 
 /* Status Badges */
 .status-badge {
-  padding: 4px 10px;
+  padding: 4px 12px;
   border-radius: 20px;
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   font-weight: 600;
 }
-.status-pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
-.status-confirmed { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
-.status-shipping { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
-.status-delivered { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-.status-cancelled { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+.status-pending { background: rgba(245, 158, 11, 0.15); color: #b45309; }
+.status-confirmed { background: rgba(59, 130, 246, 0.15); color: #1d4ed8; }
+.status-shipping { background: rgba(168, 85, 247, 0.15); color: #7e22ce; }
+.status-delivered { background: rgba(16, 185, 129, 0.15); color: #047857; }
+.status-cancelled { background: rgba(239, 68, 68, 0.15); color: #b91c1c; }
 
 .category-pill {
-  background: rgba(255,255,255,0.05);
+  background: #ffffff;
   border: 1px solid var(--border-color);
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
   border-radius: 20px;
-  padding: 6px 16px;
-  font-size: 0.9rem;
+  padding: 6px 18px;
+  font-size: 0.92rem;
   cursor: pointer;
   transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
 }
 
 .category-pill.active, .category-pill:hover {
-  background: var(--accent);
-  color: #0b132b;
-  border-color: var(--accent);
+  background: var(--gradient-primary);
+  color: #ffffff;
+  border-color: transparent;
   font-weight: 600;
+  box-shadow: 0 4px 12px rgba(200, 39, 78, 0.25);
+}
+
+/* Text overrides for readability in DermAI Light Theme */
+.text-white {
+  color: var(--color-text) !important;
+}
+
+.text-light {
+  color: #3f3647 !important;
+}
+
+.text-secondary {
+  color: var(--color-text-secondary) !important;
+}
+
+.text-accent {
+  color: var(--color-primary) !important;
+}
+
+.badge-dermai-primary {
+  background-color: var(--color-primary) !important;
+  color: #fff !important;
+}
+
+.badge-dermai-accent {
+  background-color: var(--color-accent) !important;
+  color: #fff !important;
+}
+
+.badge-dermai-secondary {
+  background-color: var(--color-secondary) !important;
+  color: #fff !important;
 }

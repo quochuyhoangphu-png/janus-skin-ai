@@ -13,7 +13,7 @@ const AppNavbar = () => {
     <Navbar expand="lg" className="navbar-custom sticky-top">
       <Container>
         <Navbar.Brand as={Link} to="/" className="d-flex align-items-center gap-2">
-          <span className="brand-logo">✨ TechShop</span>
+          <span className="brand-logo">✨ DermAI</span>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
@@ -21,7 +21,7 @@ const AppNavbar = () => {
             <Nav.Link as={Link} to="/">Trang chủ</Nav.Link>
             <Nav.Link as={Link} to="/products">Sản phẩm</Nav.Link>
             <Nav.Link as={Link} to="/skin-analysis" className="nav-highlight-link">
-              <span className="badge rounded-pill me-1" style={{ background: 'var(--accent)', color: '#000' }}>AI</span>
+              <span className="badge rounded-pill me-1" style={{ background: 'var(--color-primary)', color: '#fff' }}>AI</span>
               Phân tích da JANUS
             </Nav.Link>
             <Nav.Link as={Link} to="/about">Giới thiệu</Nav.Link>
@@ -33,7 +33,7 @@ const AppNavbar = () => {
             <Nav.Link as={Link} to="/cart" className="position-relative">
               <FiShoppingCart size={20} />
               {totalItems > 0 && (
-                <Badge bg="warning" text="dark" pill className="cart-badge">
+                <Badge bg="danger" pill className="cart-badge">
                   {totalItems}
                 </Badge>
               )}
@@ -57,7 +57,7 @@ const AppNavbar = () => {
               </div>
             ) : (
               <div className="d-flex gap-2">
-                <Link to="/login" className="btn btn-sm btn-outline-light">Đăng nhập</Link>
+                <Link to="/login" className="btn btn-sm btn-outline-secondary" style={{ borderColor: 'var(--color-border)' }}>Đăng nhập</Link>
                 <Link to="/register" className="btn btn-sm btn-accent">Đăng ký</Link>
               </div>
             )}

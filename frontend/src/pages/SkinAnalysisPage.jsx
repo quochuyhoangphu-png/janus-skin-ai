@@ -300,8 +300,8 @@ const SkinAnalysisPage = () => {
       <Container>
         {/* Tiêu đề & Giới thiệu chuẩn phong cách Clinic thẩm mỹ */}
         <div className="mb-4 text-center">
-          <div className="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill mb-2" style={{ background: 'rgba(226, 176, 73, 0.15)', border: '1px solid var(--accent)', color: 'var(--accent)' }}>
-            <FiActivity /> Chuyên Gia Thẩm Mỹ & Phân Tích Da Công Nghệ Cao
+          <div className="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill mb-2" style={{ background: 'rgba(200, 39, 78, 0.08)', border: '1px solid rgba(200, 39, 78, 0.25)', color: 'var(--color-primary)', fontWeight: 600 }}>
+            <FiActivity /> DermAI • Phân Tích Da Công Nghệ Cao JANUS Pro
           </div>
           <h1 className="hero-title mb-2">Hệ Thống Phân Tích Da & Tư Vấn Hoạt Chất JANUS Pro</h1>
           <p className="hero-subtitle mx-auto" style={{ maxWidth: 820 }}>
@@ -367,21 +367,21 @@ const SkinAnalysisPage = () => {
             <Row className="g-4">
               {/* Thông tin ca đo hiện tại */}
               <Col lg={4} md={12}>
-                <div className="p-3 rounded-3 h-100" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-color)' }}>
+                <div className="p-3 rounded-3 h-100" style={{ background: '#faf5f9', border: '1px solid var(--border-color)' }}>
                   <h6 className="text-white mb-3 d-flex align-items-center gap-2">
-                    <FiUser style={{ color: 'var(--accent)' }} /> Thông Tin Ca Đo
+                    <FiUser style={{ color: 'var(--color-primary)' }} /> Thông Tin Ca Đo
                   </h6>
                   {caseInput?.metadata ? (
                     <div className="small text-secondary">
-                      <div className="d-flex justify-content-between py-1 border-bottom border-dark">
+                      <div className="d-flex justify-content-between py-1 border-bottom border-secondary-subtle">
                         <span>Mã hồ sơ:</span>
                         <strong className="text-white">{caseInput.metadata.case_id}</strong>
                       </div>
-                      <div className="d-flex justify-content-between py-1 border-bottom border-dark">
+                      <div className="d-flex justify-content-between py-1 border-bottom border-secondary-subtle">
                         <span>Độ tuổi:</span>
                         <strong className="text-white">{caseInput.metadata.age_years} tuổi</strong>
                       </div>
-                      <div className="d-flex justify-content-between align-items-center py-1 border-bottom border-dark">
+                      <div className="d-flex justify-content-between align-items-center py-1 border-bottom border-secondary-subtle">
                         <span>Giới tính:</span>
                         <div className="d-flex align-items-center gap-1">
                           <Button
@@ -404,11 +404,11 @@ const SkinAnalysisPage = () => {
                           </Button>
                         </div>
                       </div>
-                      <div className="d-flex justify-content-between py-1 border-bottom border-dark">
+                      <div className="d-flex justify-content-between py-1 border-bottom border-secondary-subtle">
                         <span>Ngày thực hiện:</span>
                         <strong className="text-white">{caseInput.metadata.report_date || 'Hôm nay'}</strong>
                       </div>
-                      <div className="d-flex justify-content-between py-1 border-bottom border-dark">
+                      <div className="d-flex justify-content-between py-1 border-bottom border-secondary-subtle">
                         <span>Mã loại da:</span>
                         <Badge bg="primary">{caseInput.skin_type_report?.code_as_printed || caseInput.skin_type_report?.main_code || 'Đang phân tích'}</Badge>
                       </div>
@@ -425,9 +425,9 @@ const SkinAnalysisPage = () => {
 
               {/* Bối cảnh an toàn da liễu */}
               <Col lg={8} md={12}>
-                <div className="p-3 rounded-3" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-color)' }}>
+                <div className="p-3 rounded-3" style={{ background: '#faf5f9', border: '1px solid var(--border-color)' }}>
                   <h6 className="text-white mb-2 d-flex align-items-center gap-2">
-                    <FiShield style={{ color: 'var(--accent)' }} /> Tiền Sử Da Liễu & Kiểm Soát An Toàn
+                    <FiShield style={{ color: 'var(--color-primary)' }} /> Tiền Sử Da Liễu & Kiểm Soát An Toàn
                   </h6>
                   <p className="small text-secondary mb-3">
                     Hệ thống sẽ đối chiếu các thông tin dưới đây để tự động loại trừ các hoạt chất chống chỉ định (như Retinoid trong thai kỳ, BHA nồng độ cao khi da kích ứng) nhằm đảm bảo an toàn tuyệt đối cho làn da.
@@ -1023,15 +1023,15 @@ const SkinAnalysisPage = () => {
 
         {/* Modal Đối Chiếu Dữ Liệu Bóc Tách PDF */}
         <Modal show={showAuditModal} onHide={() => setShowAuditModal(false)} size="lg" centered>
-          <Modal.Header closeButton className="bg-dark text-white border-secondary">
-            <Modal.Title className="fs-5 d-flex align-items-center gap-2">
-              <FiSearch className="text-warning" /> Bảng Kiểm Định Dữ Liệu Đo Da Thực Tế Từ Phiếu PDF
+          <Modal.Header closeButton className="bg-white border-bottom" style={{ borderColor: 'var(--border-color)' }}>
+            <Modal.Title className="fs-5 d-flex align-items-center gap-2" style={{ color: 'var(--color-primary)', fontFamily: 'var(--font-heading)' }}>
+              <FiSearch className="text-danger" /> Bảng Kiểm Định Dữ Liệu Đo Da Thực Tế Từ Phiếu PDF
             </Modal.Title>
           </Modal.Header>
-          <Modal.Body className="bg-dark text-light p-4">
-            <div className="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary">
+          <Modal.Body className="bg-white p-4">
+            <div className="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom" style={{ borderColor: 'var(--border-color)' }}>
               <div>
-                <div>Mã ca: <strong className="text-white">{caseInput?.metadata?.case_id || 'PDF_UPLOADED'}</strong></div>
+                <div>Mã ca: <strong className="text-dark">{caseInput?.metadata?.case_id || 'PDF_UPLOADED'}</strong></div>
                 <div className="small text-secondary">Tệp nguồn: {analysisResult?.source_filename || 'Phiếu đo da'}</div>
               </div>
               <div className="text-end">
@@ -1054,18 +1054,18 @@ const SkinAnalysisPage = () => {
                 {caseInput?.whole_face_features && Object.entries(caseInput.whole_face_features).map(([key, val]) => (
                   <tr key={key}>
                     <td>
-                      <div className="text-white font-weight-bold">{val.feature_name_vi || key}</div>
+                      <div className="text-dark font-weight-bold">{val.feature_name_vi || key}</div>
                       <small className="text-secondary">{key}</small>
                     </td>
                     <td>
                       {val.is_measured_from_pdf !== false ? (
-                        <span className="text-warning font-weight-bold fs-6">{val.report_value}</span>
+                        <span className="text-danger font-weight-bold fs-6">{val.report_value}</span>
                       ) : (
                         <span className="text-muted">—</span>
                       )}
                     </td>
                     <td>
-                      <span className="text-light">{val.comparison_value}</span>
+                      <span className="text-dark">{val.comparison_value}</span>
                     </td>
                     <td>
                       {val.is_measured_from_pdf !== false ? (
@@ -1079,8 +1079,8 @@ const SkinAnalysisPage = () => {
               </tbody>
             </Table>
           </Modal.Body>
-          <Modal.Footer className="bg-dark border-secondary">
-            <Button variant="outline-light" onClick={() => setShowAuditModal(false)}>
+          <Modal.Footer className="bg-white border-top" style={{ borderColor: 'var(--border-color)' }}>
+            <Button variant="outline-secondary" onClick={() => setShowAuditModal(false)}>
               Đóng Bảng Kiểm Định
             </Button>
           </Modal.Footer>
